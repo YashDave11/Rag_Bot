@@ -6,7 +6,7 @@ import time
 import os
 
 SLEEP_TIMER = 5
-SERVERLESS_URL = os.getenv("SERVERLESS_URL")
+SERVERLESS_URL = "https://vtqjvgchmwcjwsrela2oyhlegu0hwqnw.lambda-url.us-west-2.on.aws/"
 CODESPACE_NAME = os.getenv("CODESPACE_NAME")
 
 
