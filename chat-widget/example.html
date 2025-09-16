@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Website with MongoDB Chat Widget</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        line-height: 1.6;
+      }
+
+      .header {
+        background: #333;
+        color: white;
+        padding: 1rem 0;
+        text-align: center;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 4rem 2rem;
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .hero h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+      }
+
+      .feature {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .feature h3 {
+        color: #333;
+        margin-bottom: 1rem;
+      }
+
+      .cta {
+        background: #007bff;
+        color: white;
+        padding: 3rem 2rem;
+        text-align: center;
+        margin: 2rem 0;
+        border-radius: 8px;
+      }
+
+      .cta h2 {
+        margin-bottom: 1rem;
+      }
+
+      .btn {
+        display: inline-block;
+        background: white;
+        color: #007bff;
+        padding: 1rem 2rem;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        margin-top: 1rem;
+      }
+
+      .footer {
+        background: #333;
+        color: white;
+        text-align: center;
+        padding: 2rem 0;
+        margin-top: 4rem;
+      }
+    </style>
+  </head>
+  <body>
+    <header class="header">
+      <h1>🚀 My Awesome Website</h1>
+    </header>
+
+    <div class="hero">
+      <h1>Welcome to Our Platform</h1>
+      <p>Experience the power of MongoDB with our AI assistant</p>
+    </div>
+
+    <div class="container">
+      <div class="features">
+        <div class="feature">
+          <h3>🎯 Smart Solutions</h3>
+          <p>
+            Get instant answers to your MongoDB questions with our AI-powered
+            assistant.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>💬 24/7 Support</h3>
+          <p>
+            Our chat widget is always available to help you with MongoDB best
+            practices.
+          </p>
+        </div>
+
+        <div class="feature">
+          <h3>🚀 Easy Integration</h3>
+          <p>Add our chat widget to any website with just one line of code.</p>
+        </div>
+      </div>
+
+      <div class="cta">
+        <h2>Need Help with MongoDB?</h2>
+        <p>
+          Click the chat bubble in the bottom-right corner to get instant
+          assistance!
+        </p>
+        <a href="#" class="btn">Get Started</a>
+      </div>
+    </div>
+
+    <footer class="footer">
+      <p>&copy; 2024 My Awesome Website. Powered by MongoDB RAG Chat Widget.</p>
+    </footer>
+
+    <!-- MongoDB Chat Widget Integration -->
+    <script
+      src="dist/mongodb-chat-widget.umd.js"
+      data-api-url="http://localhost:8000"
+      data-position="bottom-right"
+      data-primary-color="#007bff"
+      data-title="MongoDB Helper"
+      data-welcome-message="Hi! I'm here to help with all your MongoDB questions. What would you like to know?"
+    ></script>
+  </body>
+</html>

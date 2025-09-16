@@ -1,0 +1,31 @@
+{
+  "name": "mongodb-rag-chat-widget",
+  "version": "1.0.0",
+  "description": "Embeddable MongoDB RAG chat widget",
+  "main": "dist/chat-widget.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "build-widget": "vite build --mode widget"
+  },
+  "dependencies": {
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0"
+  },
+  "devDependencies": {
+    "@types/react": "^18.2.43",
+    "@types/react-dom": "^18.2.17",
+    "@vitejs/plugin-react": "^4.2.1",
+    "vite": "^5.0.8"
+  },
+  "keywords": [
+    "mongodb",
+    "rag",
+    "chatbot",
+    "widget",
+    "react"
+  ],
+  "author": "Your Name",
+  "license": "MIT"
+}

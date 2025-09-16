@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB RAG Chat API Test</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .chat-container {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+
+      .chat-messages {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        background-color: #fafafa;
+      }
+
+      .message {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 8px;
+      }
+
+      .user-message {
+        background-color: #007bff;
+        color: white;
+        text-align: right;
+        margin-left: 20%;
+      }
+
+      .bot-message {
+        background-color: #e9ecef;
+        color: #333;
+        margin-right: 20%;
+      }
+
+      .input-container {
+        display: flex;
+        gap: 10px;
+      }
+
+      #messageInput {
+        flex: 1;
+        padding: 10px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+      }
+
+      #sendButton {
+        padding: 10px 20px;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #sendButton:hover {
+        background-color: #0056b3;
+      }
+
+      #sendButton:disabled {
+        background-color: #6c757d;
+        cursor: not-allowed;
+      }
+
+      .status {
+        margin-top: 10px;
+        padding: 10px;
+        border-radius: 5px;
+        font-size: 14px;
+      }
+
+      .status.success {
+        background-color: #d4edda;
+        color: #155724;
+      }
+
+      .status.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+
+      .loading {
+        color: #6c757d;
+        font-style: italic;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="chat-container">
+      <h1>🤖 MongoDB RAG Chat API Test</h1>
+      <p>Test the MongoDB RAG chatbot API. Ask questions about MongoDB!</p>
+
+      <div class="chat-messages" id="chatMessages">
+        <div class="message bot-message">
+          <strong>MongoDB Assistant:</strong> Hello! I'm ready to help you with
+          MongoDB questions. Try asking about best practices, indexing, or
+          performance optimization!
+        </div>
+      </div>
+
+      <div class="input-container">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Ask me about MongoDB..."
+          onkeypress="handleKeyPress(event)"
+        />
+        <button id="sendButton" onclick="sendMessage()">Send</button>
+      </div>
+
+      <div id="status"></div>
+    </div>
+
+    <script>
+      let sessionId = null;
+      const API_BASE = "http://localhost:8000";
+
+      function addMessage(content, isUser = false) {
+        const messagesContainer = document.getElementById("chatMessages");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${
+          isUser ? "user-message" : "bot-message"
+        }`;
+
+        const sender = isUser ? "You" : "MongoDB Assistant";
+        messageDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
+
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function showStatus(message, isError = false) {
+        const statusDiv = document.getElementById("status");
+        statusDiv.className = `status ${isError ? "error" : "success"}`;
+        statusDiv.textContent = message;
+
+        setTimeout(() => {
+          statusDiv.textContent = "";
+          statusDiv.className = "";
+        }, 3000);
+      }
+
+      function setLoading(loading) {
+        const sendButton = document.getElementById("sendButton");
+        const messageInput = document.getElementById("messageInput");
+
+        sendButton.disabled = loading;
+        messageInput.disabled = loading;
+
+        if (loading) {
+          sendButton.textContent = "Sending...";
+          addMessage("Thinking...", false);
+        } else {
+          sendButton.textContent = "Send";
+          // Remove the "Thinking..." message
+          const messages = document.querySelectorAll(".message");
+          const lastMessage = messages[messages.length - 1];
+          if (lastMessage && lastMessage.textContent.includes("Thinking...")) {
+            lastMessage.remove();
+          }
+        }
+      }
+
+      async function sendMessage() {
+        const messageInput = document.getElementById("messageInput");
+        const message = messageInput.value.trim();
+
+        if (!message) return;
+
+        // Add user message to chat
+        addMessage(message, true);
+        messageInput.value = "";
+
+        setLoading(true);
+
+        try {
+          const response = await fetch(`${API_BASE}/chat`, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: message,
+              session_id: sessionId,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          // Store session ID for future messages
+          sessionId = data.session_id;
+
+          // Add bot response to chat
+          addMessage(data.response, false);
+
+          showStatus("Message sent successfully!");
+        } catch (error) {
+          console.error("Error:", error);
+          addMessage(
+            "Sorry, I encountered an error. Please make sure the API server is running on http://localhost:8000",
+            false
+          );
+          showStatus("Error sending message. Check console for details.", true);
+        }
+
+        setLoading(false);
+      }
+
+      function handleKeyPress(event) {
+        if (event.key === "Enter") {
+          sendMessage();
+        }
+      }
+
+      // Test API connection on page load
+      window.onload = async function () {
+        try {
+          const response = await fetch(`${API_BASE}/health`);
+          if (response.ok) {
+            const data = await response.json();
+            showStatus(
+              `API connected! ${data.documents_loaded} documents loaded.`
+            );
+          } else {
+            throw new Error("API not responding");
+          }
+        } catch (error) {
+          showStatus(
+            "Could not connect to API. Make sure the server is running on http://localhost:8000",
+            true
+          );
+        }
+      };
+    </script>
+  </body>
+</html>

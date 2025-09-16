@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB RAG Chat Widget - Demo</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .demo-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        background: white;
+        border-radius: 15px;
+        padding: 40px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .demo-header {
+        text-align: center;
+        margin-bottom: 40px;
+      }
+
+      .demo-header h1 {
+        color: #333;
+        margin-bottom: 10px;
+      }
+
+      .demo-header p {
+        color: #666;
+        font-size: 18px;
+      }
+
+      .demo-content {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 40px;
+        margin-bottom: 40px;
+      }
+
+      .demo-section {
+        background: #f8f9fa;
+        padding: 30px;
+        border-radius: 10px;
+      }
+
+      .demo-section h3 {
+        color: #333;
+        margin-bottom: 15px;
+      }
+
+      .demo-section p {
+        color: #666;
+        line-height: 1.6;
+      }
+
+      .code-block {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 20px;
+        border-radius: 8px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+        margin: 15px 0;
+      }
+
+      .integration-note {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 20px;
+        margin: 20px 0;
+        border-radius: 0 8px 8px 0;
+      }
+
+      @media (max-width: 768px) {
+        .demo-content {
+          grid-template-columns: 1fr;
+        }
+
+        .demo-container {
+          padding: 20px;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <div class="demo-header">
+        <h1>🤖 MongoDB RAG Chat Widget</h1>
+        <p>Embeddable AI-powered MongoDB assistant for your website</p>
+      </div>
+
+      <div class="demo-content">
+        <div class="demo-section">
+          <h3>🚀 Features</h3>
+          <p>
+            • AI-powered MongoDB assistance<br />
+            • Clean, modern chat interface<br />
+            • Easy website integration<br />
+            • Customizable appearance<br />
+            • Session management<br />
+            • Mobile responsive
+          </p>
+        </div>
+
+        <div class="demo-section">
+          <h3>💬 Try It Out</h3>
+          <p>
+            Click the chat bubble in the bottom-right corner to start chatting
+            with our MongoDB AI assistant!
+          </p>
+          <p>
+            Ask questions like:<br />
+            • "What are MongoDB best practices?"<br />
+            • "How do I create an index?"<br />
+            • "What is aggregation?"
+          </p>
+        </div>
+      </div>
+
+      <div class="integration-note">
+        <h3>🔧 Easy Integration</h3>
+        <p>Add this widget to any website with just one line of code:</p>
+        <div class="code-block">
+          &lt;script src="mongodb-chat-widget.js"
+          data-api-url="http://localhost:8000"&gt;&lt;/script&gt;
+        </div>
+      </div>
+    </div>
+
+    <!-- Chat Widget will be mounted here -->
+    <div id="mongodb-chat-widget"></div>
+
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>

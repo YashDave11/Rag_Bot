@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MongoDB RAG Chat Widget - Add AI-Powered MongoDB Assistant to Your Website</title>
+    <meta name="description" content="Embed an intelligent MongoDB assistant on your website with just one line of code. Powered by advanced RAG technology and Gemini AI.">
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 100px 0;
+            text-align: center;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .cta-button {
+            display: inline-block;
+            background: #00A86B;
+            color: white;
+            padding: 15px 30px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0, 168, 107, 0.3);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 168, 107, 0.4);
+        }
+
+        .features {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 3rem;
+            margin-top: 3rem;
+        }
+
+        .feature {
+            background: white;
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .feature h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .integration {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .integration h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 3rem;
+            color: #333;
+        }
+
+        .code-example {
+            background: #1a1a1a;
+            color: #f8f8f2;
+            padding: 2rem;
+            border-radius: 12px;
+            margin: 2rem 0;
+            overflow-x: auto;
+            font-family: 'Monaco', 'Menlo', monospace;
+            position: relative;
+        }
+
+        .code-example::before {
+            content: 'HTML';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #00A86B;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 10px;
+            right: 80px;
+            background: #444;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+
+        .copy-button:hover {
+            background: #555;
+        }
+
+        .customization {
+            padding: 80px 0;
+            background: #f8f9fa;
+        }
+
+        .customization-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+            margin-top: 3rem;
+        }
+
+        .customization-options {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .option {
+            margin-bottom: 1.5rem;
+        }
+
+        .option label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .option input, .option select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+
+        .option input:focus, .option select:focus {
+            outline: none;
+            border-color: #00A86B;
+        }
+
+        .preview {
+            text-align: center;
+        }
+
+        .preview h3 {
+            margin-bottom: 1rem;
+            color: #333;
+        }
+
+        .demo-container {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 3rem;
+            border-radius: 12px;
+            color: white;
+            position: relative;
+            min-height: 300px;
+        }
+
+        .pricing {
+            padding: 80px 0;
+            background: white;
+            text-align: center;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+
+        .pricing-card {
+            background: white;
+            border: 2px solid #e9ecef;
+            border-radius: 16px;
+            padding: 2.5rem;
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: #00A86B;
+            transform: translateY(-5px);
+        }
+
+        .pricing-card.featured {
+            border-color: #00A86B;
+            transform: scale(1.05);
+        }
+
+        .pricing-card.featured::before {
+            content: 'Most Popular';
+            position: absolute;
+            top: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #00A86B;
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #00A86B;
+            margin-bottom: 1rem;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: #666;
+        }
+
+        .footer {
+            background: #1a1a1a;
+            color: white;
+            padding: 40px 0;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+
+            .customization-grid {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+            }
+
+            .features-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>🤖 MongoDB RAG Chat Widget</h1>
+            <p>Add an intelligent MongoDB assistant to your website with just one line of code</p>
+            <a href="#integration" class="cta-button">Get Started Free</a>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">Why Choose Our Widget?</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+                Powered by advanced RAG technology and Gemini AI for accurate, contextual responses
+            </p>
+            
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Lightning Fast Setup</h3>
+                    <p>Add to any website with just one script tag. No complex installation or configuration required.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🧠</div>
+                    <h3>AI-Powered Responses</h3>
+                    <p>Advanced RAG system with Gemini AI provides accurate, contextual answers about MongoDB.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🎨</div>
+                    <h3>Fully Customizable</h3>
+                    <p>Match your brand with custom colors, titles, positions, and themes.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📱</div>
+                    <h3>Mobile Responsive</h3>
+                    <p>Perfect experience on desktop, tablet, and mobile devices.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure & Reliable</h3>
+                    <p>Enterprise-grade security with 99.9% uptime guarantee.</p>
+                </div>
+                
+                <div class="feature">
+                    <div class="feature-icon">📊</div>
+                    <h3>Analytics Dashboard</h3>
+                    <p>Track conversations, popular questions, and user engagement metrics.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Integration Section -->
+    <section class="integration" id="integration">
+        <div class="container">
+            <h2>🚀 Super Simple Integration</h2>
+            
+            <div style="text-align: center; margin-bottom: 3rem;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Just add this one line to your website:</h3>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-button" onclick="copyCode('basic-code')">Copy</button>
+                <pre id="basic-code">&lt;script src="https://cdn.mongodb-chat.com/widget.js" data-widget-key="your-api-key"&gt;&lt;/script&gt;</pre>
+            </div>
+
+            <div style="text-align: center; margin: 3rem 0;">
+                <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Or with custom configuration:</h3>
+            </div>
+
+            <div class="code-example">
+                <button class="copy-button" onclick="copyCode('custom-code')">Copy</button>
+                <pre id="custom-code">&lt;script 
+  src="https://cdn.mongodb-chat.com/widget.js"
+  data-widget-key="your-api-key"
+  data-title="MongoDB Expert"
+  data-primary-color="#007bff"
+  data-position="bottom-left"&gt;
+&lt;/script&gt;</pre>
+            </div>
+
+            <div style="text-align: center; margin-top: 3rem;">
+                <p style="font-size: 1.1rem; color: #666;">
+                    That's it! The chat widget will appear on your website instantly. 
+                    <br>No downloads, no complex setup, no maintenance required.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Customization Section -->
+    <section class="customization">
+        <div class="container">
+            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem;">🎨 Live Customization</h2>
+            <p style="text-align: center; font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+                Customize your widget and see the changes in real-time
+            </p>
+
+            <div class="customization-grid">
+                <div class="customization-options">
+                    <h3 style="margin-bottom: 1.5rem;">Widget Configuration</h3>
+                    
+                    <div class="option">
+                        <label for="widget-title">Title</label>
+                        <input type="text" id="widget-title" value="MongoDB Assistant" onchange="updatePreview()">
+                    </div>
+                    
+                    <div class="option">
+                        <label for="widget-subtitle">Subtitle</label>
+                        <input type="text" id="widget-subtitle" value="Ask me anything about MongoDB" onchange="updatePreview()">
+                    </div>
+                    
+                    <div class="option">
+                        <label for="primary-color">Primary Color</label>
+                        <input type="color" id="primary-color" value="#00A86B" onchange="updatePreview()">
+                    </div>
+                    
+                    <div class="option">
+                        <label for="position">Position</label>
+                        <select id="position" onchange="updatePreview()">
+                            <option value="bottom-right">Bottom Right</option>
+                            <option value="bottom-left">Bottom Left</option>
+                            <option value="top-right">Top Right</option>
+                            <option value="top-left">Top Left</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top: 2rem;">
+                        <h4 style="margin-bottom: 1rem;">Generated Code:</h4>
+                        <div class="code-example" style="font-size: 0.9rem;">
+                            <button class="copy-button" onclick="copyCode('generated-code')">Copy</button>
+                            <pre id="generated-code"></pre>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview">
+                    <h3>Live Preview</h3>
+                    <div class="demo-container">
+                        <h4>Your Website</h4>
+                        <p>This is how the chat widget will look on your website.</p>
+                        <p>The widget appears in the position you selected with your custom colors and text.</p>
+                        
+                        <!-- Preview widget will be inserted here -->
+                        <div id="widget-preview" style="position: absolute; bottom: 20px; right: 20px;">
+                            <div style="width: 60px; height: 60px; border-radius: 50%; background: #00A86B; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                                💬
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing">
+        <div class="container">
+            <h2 style="font-size: 2.5rem; margin-bottom: 1rem;">💰 Simple, Transparent Pricing</h2>
+            <p style="font-size: 1.2rem; color: #666; margin-bottom: 2rem;">
+                Choose the plan that fits your needs. No hidden fees, cancel anytime.
+            </p>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">Free</div>
+                    <ul style="text-align: left; margin: 2rem 0;">
+                        <li>✅ Up to 100 conversations/month</li>
+                        <li>✅ Basic customization</li>
+                        <li>✅ Email support</li>
+                        <li>✅ MongoDB knowledge base</li>
+                    </ul>
+                    <a href="#" class="cta-button" style="display: block; text-align: center;">Get Started</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <h3>Professional</h3>
+                    <div class="price">$29<span class="price-period">/month</span></div>
+                    <ul style="text-align: left; margin: 2rem 0;">
+                        <li>✅ Up to 5,000 conversations/month</li>
+                        <li>✅ Full customization</li>
+                        <li>✅ Priority support</li>
+                        <li>✅ Analytics dashboard</li>
+                        <li>✅ Custom branding</li>
+                        <li>✅ API access</li>
+                    </ul>
+                    <a href="#" class="cta-button" style="display: block; text-align: center;">Start Free Trial</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">Custom</div>
+                    <ul style="text-align: left; margin: 2rem 0;">
+                        <li>✅ Unlimited conversations</li>
+                        <li>✅ White-label solution</li>
+                        <li>✅ Dedicated support</li>
+                        <li>✅ Custom integrations</li>
+                        <li>✅ SLA guarantee</li>
+                        <li>✅ On-premise deployment</li>
+                    </ul>
+                    <a href="#" class="cta-button" style="display: block; text-align: center;">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 MongoDB RAG Chat Widget. All rights reserved.</p>
+            <p style="margin-top: 1rem; opacity: 0.7;">
+                Powered by advanced RAG technology and Gemini AI
+            </p>
+        </div>
+    </footer>
+
+    <!-- Demo Widget (using our professional embed script) -->
+    <link rel="stylesheet" href="http://localhost:3001/dist/style.css">
+    <script src="http://localhost:3001/dist/mongodb-chat-widget.umd.js" 
+            data-api-url="http://localhost:8000"
+            data-title="Try Me!"
+            data-welcome-message="I'm a live demo of the widget"
+            data-primary-color="#6f42c1"
+            data-position="bottom-left">
+    </script>
+
+    <script>
+        function updatePreview() {
+            const title = document.getElementById('widget-title').value;
+            const subtitle = document.getElementById('widget-subtitle').value;
+            const color = document.getElementById('primary-color').value;
+            const position = document.getElementById('position').value;
+
+            // Update preview widget
+            const preview = document.getElementById('widget-preview');
+            const container = preview.parentElement;
+            
+            // Update position
+            preview.style.position = 'absolute';
+            preview.style.bottom = position.includes('bottom') ? '20px' : 'auto';
+            preview.style.top = position.includes('top') ? '20px' : 'auto';
+            preview.style.left = position.includes('left') ? '20px' : 'auto';
+            preview.style.right = position.includes('right') ? '20px' : 'auto';
+            
+            // Update color
+            preview.querySelector('div').style.background = color;
+
+            // Update generated code
+            const code = `<script 
+  src="https://cdn.mongodb-chat.com/widget.js"
+  data-widget-key="your-api-key"
+  data-title="${title}"
+  data-subtitle="${subtitle}"
+  data-primary-color="${color}"
+  data-position="${position}">
+</script>`;
+            
+            document.getElementById('generated-code').textContent = code;
+        }
+
+        function copyCode(elementId) {
+            const code = document.getElementById(elementId).textContent;
+            navigator.clipboard.writeText(code).then(() => {
+                const button = event.target;
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.style.background = '#00A86B';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.style.background = '#444';
+                }, 2000);
+            });
+        }
+
+        // Initialize preview
+        updatePreview();
+    </script>
+</body>
+</html>
