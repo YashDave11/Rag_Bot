@@ -17,8 +17,13 @@ def test_agent():
         # Setup Gemini
         api_key = "AIzaSyCl5ubFeNTdeqmWPu4iYOc97dec6fuCHcc"
         genai.configure(api_key=api_key)
-        model = genai.GenerativeModel('gemini-1.5-flash')
-        print("✅ Gemini configured")
+        # Try different model names
+        try:
+            model = genai.GenerativeModel('gemini-1.5-pro')
+            print("✅ Gemini configured with gemini-1.5-pro")
+        except:
+            model = genai.GenerativeModel('gemini-pro')
+            print("✅ Gemini configured with gemini-pro")
         
         # Load data
         data_dir = Path(__file__).parent / "data"

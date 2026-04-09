@@ -111,9 +111,8 @@
 
       <div class="chat-messages" id="chatMessages">
         <div class="message bot-message">
-          <strong>MongoDB Assistant:</strong> Hello! I'm ready to help you with
-          MongoDB questions. Try asking about best practices, indexing, or
-          performance optimization!
+          <strong>Qunix Smart Support:</strong> Hi!! How can I help you today?
+          I'm ready to assist you with any questions or support you need!
         </div>
       </div>
 
@@ -121,7 +120,7 @@
         <input
           type="text"
           id="messageInput"
-          placeholder="Ask me about MongoDB..."
+          placeholder="Ask me about TechnoNJR..."
           onkeypress="handleKeyPress(event)"
         />
         <button id="sendButton" onclick="sendMessage()">Send</button>
@@ -141,7 +140,7 @@
           isUser ? "user-message" : "bot-message"
         }`;
 
-        const sender = isUser ? "You" : "MongoDB Assistant";
+        const sender = isUser ? "You" : "Qunix Smart Support";
         messageDiv.innerHTML = `<strong>${sender}:</strong> ${content}`;
 
         messagesContainer.appendChild(messageDiv);

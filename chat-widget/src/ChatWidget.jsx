@@ -5,8 +5,8 @@ const ChatWidget = ({
   apiUrl = "http://localhost:8000",
   position = "bottom-right",
   primaryColor = "#007bff",
-  title = "MongoDB Assistant",
-  welcomeMessage = "Hello! I'm your MongoDB assistant. Ask me anything about MongoDB!",
+  title = "Qunix Smart Support",
+  welcomeMessage = "Hi!! How can I help you today?",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
@@ -274,7 +274,7 @@ const ChatWidget = ({
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Ask me about MongoDB..."
+                placeholder="Ask me about TechnoNJR..."
                 disabled={isLoading || !isConnected}
                 rows="1"
               />

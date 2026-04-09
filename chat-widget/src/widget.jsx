@@ -10,8 +10,8 @@ window.MongoDBChatWidget = {
       apiUrl = "http://localhost:8000",
       position = "bottom-right",
       primaryColor = "#007bff",
-      title = "MongoDB Assistant",
-      welcomeMessage = "Hello! I'm your MongoDB assistant. Ask me anything about MongoDB!",
+      title = "Qunix Smart Support",
+      welcomeMessage = "Hi!! How can I help you today?",
     } = config;
 
     // Create container if it doesn't exist
@@ -56,10 +56,10 @@ document.addEventListener("DOMContentLoaded", function () {
       apiUrl: script.getAttribute("data-api-url") || "http://localhost:8000",
       position: script.getAttribute("data-position") || "bottom-right",
       primaryColor: script.getAttribute("data-primary-color") || "#007bff",
-      title: script.getAttribute("data-title") || "MongoDB Assistant",
+      title: script.getAttribute("data-title") || "Qunix Smart Support",
       welcomeMessage:
         script.getAttribute("data-welcome-message") ||
-        "Hello! I'm your MongoDB assistant. Ask me anything about MongoDB!",
+        "Hi!! How can I help you today?",
     };
 
     window.MongoDBChatWidget.init(config);

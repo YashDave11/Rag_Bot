@@ -40,9 +40,14 @@ class CleanInteractiveAgent:
         try:
             api_key = "AIzaSyCl5ubFeNTdeqmWPu4iYOc97dec6fuCHcc"
             genai.configure(api_key=api_key)
-            self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+            # Try different model names
+            try:
+                self.gemini_model = genai.GenerativeModel('gemini-1.5-pro')
+                print("🚀 Gemini API configured successfully with gemini-1.5-pro!")
+            except:
+                self.gemini_model = genai.GenerativeModel('gemini-pro')
+                print("🚀 Gemini API configured successfully with gemini-pro!")
             self.use_gemini = True
-            print("🚀 Gemini API configured successfully!")
         except Exception as e:
             print(f"⚠️  Gemini API error: {e}")
             self.use_gemini = False
@@ -192,11 +197,11 @@ Try asking about:
         print("\n" + "="*60)
         print("💬 MongoDB AI Assistant - Interactive Mode")
         print("="*60)
-        print("Ask me anything about MongoDB!")
+        print("Ask me anything!")
         print("Examples:")
-        print("  • What are MongoDB best practices?")
-        print("  • How do I create an index?")
-        print("  • What is aggregation in MongoDB?")
+        print("  • What are the best practices?")
+        print("  • How do I get help with specific topics?")
+        print("  • What are the main policies?")
         print("  • Type 'quit' to exit")
         print("-"*60)
         

@@ -11,7 +11,7 @@ function App() {
         <div className="demo-content">
           <h2>About This Widget</h2>
           <ul>
-            <li>🤖 AI-powered MongoDB assistant</li>
+            <li>🤖 AI-powered Qunix Smart Support assistant</li>
             <li>💬 Real-time chat interface</li>
             <li>📱 Responsive design</li>
             <li>🔌 Easy website integration</li>
@@ -21,7 +21,7 @@ function App() {
           <h2>Try It Out!</h2>
           <p>
             Click the chat bubble in the bottom-right corner to start chatting
-            with the MongoDB assistant.
+            with Qunix Smart Support.
           </p>
 
           <div className="example-questions">

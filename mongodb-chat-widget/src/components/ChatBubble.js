@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import styled from "styled-components";
 import { FaComments, FaTimes, FaPaperPlane } from "react-icons/fa";
-import { SiMongodb } from "react-icons/si";
+import { FaRobot } from "react-icons/fa";
 import axios from "axios";
 
 // Styled Components
@@ -18,12 +18,12 @@ const ChatToggle = styled.button`
   width: 60px;
   height: 60px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00684a, #00a86b);
+  background: linear-gradient(135deg, #cf0404, #a00303);
   border: none;
   color: white;
   font-size: 24px;
   cursor: pointer;
-  box-shadow: 0 4px 20px rgba(0, 104, 74, 0.3);
+  box-shadow: 0 4px 20px rgba(207, 4, 4, 0.3);
   transition: all 0.3s ease;
   display: flex;
   align-items: center;
@@ -31,7 +31,7 @@ const ChatToggle = styled.button`
 
   &:hover {
     transform: scale(1.1);
-    box-shadow: 0 6px 25px rgba(0, 104, 74, 0.4);
+    box-shadow: 0 6px 25px rgba(207, 4, 4, 0.4);
   }
 
   &:active {
@@ -66,7 +66,7 @@ const ChatWindow = styled.div`
 `;
 
 const ChatHeader = styled.div`
-  background: linear-gradient(135deg, #00684a, #00a86b);
+  background: linear-gradient(135deg, #cf0404, #a00303);
   color: white;
   padding: 16px 20px;
   display: flex;
@@ -124,13 +124,14 @@ const MessageBubble = styled.div`
   padding: 12px 16px;
   border-radius: 18px;
   background: ${(props) =>
-    props.isUser ? "linear-gradient(135deg, #007bff, #0056b3)" : "white"};
+    props.isUser ? "linear-gradient(135deg, #cf0404, #a00303)" : "white"};
   color: ${(props) => (props.isUser ? "white" : "#333")};
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
   font-size: 14px;
   line-height: 1.4;
   white-space: pre-wrap;
   word-wrap: break-word;
+  text-align: left;
 `;
 
 const MessageTime = styled.div`
@@ -163,7 +164,7 @@ const MessageInput = styled.textarea`
   transition: border-color 0.2s;
 
   &:focus {
-    border-color: #00a86b;
+    border-color: #cf0404;
   }
 
   &::placeholder {
@@ -175,7 +176,7 @@ const SendButton = styled.button`
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #00684a, #00a86b);
+  background: linear-gradient(135deg, #cf0404, #a00303);
   border: none;
   color: white;
   cursor: pointer;
@@ -212,7 +213,7 @@ const TypingDots = styled.div`
   span {
     width: 6px;
     height: 6px;
-    background: #00a86b;
+    background: #cf0404;
     border-radius: 50%;
     animation: typing 1.4s infinite ease-in-out;
 
@@ -269,7 +270,7 @@ const ChatBubble = ({ apiUrl = "http://localhost:8000" }) => {
       setMessages([
         {
           id: 1,
-          text: "Hello! I'm your MongoDB assistant. I can help you with MongoDB best practices, queries, indexing, performance optimization, and more. What would you like to know?",
+          text: "Hi!! How can I help you today?",
           isUser: false,
           timestamp: new Date().toLocaleTimeString([], {
             hour: "2-digit",
@@ -348,10 +349,9 @@ const ChatBubble = ({ apiUrl = "http://localhost:8000" }) => {
       <ChatWindow isOpen={isOpen}>
         <ChatHeader>
           <HeaderInfo>
-            <SiMongodb size={24} />
+            <FaRobot size={24} />
             <div>
-              <HeaderTitle>MongoDB Assistant</HeaderTitle>
-              <HeaderSubtitle>Ask me anything about MongoDB</HeaderSubtitle>
+              <HeaderTitle>Qunix Smart Support</HeaderTitle>
             </div>
           </HeaderInfo>
           <CloseButton onClick={toggleChat}>
@@ -392,7 +392,7 @@ const ChatBubble = ({ apiUrl = "http://localhost:8000" }) => {
             value={inputValue}
             onChange={(e) => setInputValue(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Ask me about MongoDB..."
+            placeholder="Ask me about TechnoNJR..."
             disabled={isLoading}
             rows={1}
           />

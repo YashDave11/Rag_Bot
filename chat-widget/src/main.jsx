@@ -11,6 +11,6 @@ root.render(
     apiUrl="http://localhost:8000"
     position="bottom-right"
     primaryColor="#007bff"
-    title="MongoDB Assistant"
+    title="Qunix Smart Support"
   />
 );

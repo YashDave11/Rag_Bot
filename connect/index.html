@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>MongoDB Chat Assistant - Local Integration</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 2rem;
+      }
+
+      .header {
+        text-align: center;
+        color: white;
+        margin-bottom: 3rem;
+        padding: 2rem 0;
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 600px;
+        margin: 0 auto;
+      }
+
+      .main-content {
+        background: white;
+        border-radius: 15px;
+        padding: 3rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        margin-bottom: 2rem;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 2rem;
+        margin: 2rem 0;
+      }
+
+      .feature-card {
+        background: #f8f9fa;
+        padding: 2rem;
+        border-radius: 10px;
+        text-align: center;
+        border: 1px solid #e9ecef;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .feature-icon {
+        font-size: 3rem;
+        margin-bottom: 1rem;
+      }
+
+      .feature-card h3 {
+        color: #495057;
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+      }
+
+      .feature-card p {
+        color: #6c757d;
+        line-height: 1.6;
+      }
+
+      .chat-demo {
+        background: linear-gradient(45deg, #00a86b, #00d4aa);
+        color: white;
+        padding: 3rem;
+        border-radius: 15px;
+        text-align: center;
+        margin: 2rem 0;
+      }
+
+      .chat-demo h2 {
+        font-size: 2rem;
+        margin-bottom: 1rem;
+      }
+
+      .chat-demo p {
+        font-size: 1.1rem;
+        opacity: 0.9;
+        margin-bottom: 2rem;
+      }
+
+      .demo-button {
+        background: white;
+        color: #00a86b;
+        padding: 1rem 2rem;
+        border: none;
+        border-radius: 50px;
+        font-size: 1.1rem;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-block;
+      }
+
+      .demo-button:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .status-indicator {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: #28a745;
+        color: white;
+        padding: 0.5rem 1rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        z-index: 1000;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      }
+
+      .status-indicator.offline {
+        background: #dc3545;
+      }
+
+      .instructions {
+        background: #e3f2fd;
+        border-left: 4px solid #2196f3;
+        padding: 1.5rem;
+        margin: 2rem 0;
+        border-radius: 5px;
+      }
+
+      .instructions h3 {
+        color: #1976d2;
+        margin-bottom: 1rem;
+      }
+
+      .instructions ol {
+        margin-left: 1.5rem;
+      }
+
+      .instructions li {
+        margin-bottom: 0.5rem;
+        color: #424242;
+      }
+
+      @media (max-width: 768px) {
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .main-content {
+          padding: 2rem;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="status-indicator" id="status">🟢 Chat Assistant Ready</div>
+
+    <div class="container">
+      <header class="header">
+        <h1>🤖 MongoDB Chat Assistant</h1>
+        <p>
+          Your intelligent MongoDB companion is now live on this website. Ask
+          questions, get instant answers, and explore MongoDB capabilities with
+          our AI-powered assistant.
+        </p>
+      </header>
+
+      <main class="main-content">
+        <div class="chat-demo">
+          <h2>💬 Try the Chat Assistant</h2>
+          <p>
+            Look for the chat bubble in the bottom-right corner of your screen.
+            Click it to start asking MongoDB questions!
+          </p>
+          <button class="demo-button" onclick="openChatDemo()">
+            Start Chatting Now
+          </button>
+        </div>
+
+        <div class="instructions">
+          <h3>🚀 How to Use the Chat Assistant</h3>
+          <ol>
+            <li>Look for the chat bubble icon in the bottom-right corner</li>
+            <li>Click the bubble to open the chat window</li>
+            <li>Type your MongoDB questions in natural language</li>
+            <li>Get instant, intelligent responses powered by AI</li>
+            <li>Ask follow-up questions for deeper understanding</li>
+          </ol>
+        </div>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <div class="feature-icon">🎯</div>
+            <h3>Smart Answers</h3>
+            <p>
+              Get accurate, contextual responses to your MongoDB queries using
+              advanced AI and RAG technology.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">⚡</div>
+            <h3>Instant Response</h3>
+            <p>
+              No waiting around. Our assistant provides immediate answers to
+              help you solve problems quickly.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">📚</div>
+            <h3>Comprehensive Knowledge</h3>
+            <p>
+              Access a vast knowledge base covering MongoDB operations, best
+              practices, and troubleshooting.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔧</div>
+            <h3>Code Examples</h3>
+            <p>
+              Get practical code snippets and examples to implement MongoDB
+              solutions in your projects.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🌐</div>
+            <h3>Multi-Language Support</h3>
+            <p>
+              Ask questions in multiple languages and get responses in your
+              preferred language.
+            </p>
+          </div>
+
+          <div class="feature-card">
+            <div class="feature-icon">🔒</div>
+            <h3>Secure & Private</h3>
+            <p>
+              Your conversations are processed securely with privacy protection
+              built-in.
+            </p>
+          </div>
+        </div>
+
+        <div
+          style="
+            text-align: center;
+            margin: 3rem 0;
+            padding: 2rem;
+            background: #f8f9fa;
+            border-radius: 10px;
+          "
+        >
+          <h3 style="color: #495057; margin-bottom: 1rem">
+            Sample Questions to Try:
+          </h3>
+          <div
+            style="
+              display: flex;
+              flex-wrap: wrap;
+              gap: 1rem;
+              justify-content: center;
+            "
+          >
+            <span
+              style="
+                background: #007bff;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+              "
+              >How do I create an index in MongoDB?</span
+            >
+            <span
+              style="
+                background: #28a745;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+              "
+              >What are MongoDB aggregation pipelines?</span
+            >
+            <span
+              style="
+                background: #dc3545;
+                color: white;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+              "
+              >How to optimize MongoDB queries?</span
+            >
+            <span
+              style="
+                background: #ffc107;
+                color: #212529;
+                padding: 0.5rem 1rem;
+                border-radius: 20px;
+                font-size: 0.9rem;
+              "
+              >MongoDB vs SQL differences</span
+            >
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <!-- MongoDB Chat Widget Integration - React Development Server -->
+    <script
+      src="http://localhost:3000/embed.js"
+      data-mongodb-chat
+      data-api-url="http://localhost:8000"
+      data-position="bottom-right"
+      data-primary-color="#00a86b"
+      data-title="Qunix Smart Support"
+      data-welcome-message="Hi!! How can I help you today?"
+      data-placeholder="Ask me anything..."
+    ></script>
+
+    <script>
+      // Check if the API server is running
+      async function checkServerStatus() {
+        try {
+          const response = await fetch("http://localhost:8000/health");
+          if (response.ok) {
+            document.getElementById("status").textContent =
+              "🟢 Chat Assistant Ready";
+            document.getElementById("status").classList.remove("offline");
+          } else {
+            throw new Error("Server not responding");
+          }
+        } catch (error) {
+          document.getElementById("status").textContent =
+            "🔴 Server Offline - Run start_server.py";
+          document.getElementById("status").classList.add("offline");
+        }
+      }
+
+      // Function to simulate opening chat (in case the widget doesn't load)
+      function openChatDemo() {
+        // Try to trigger the chat widget
+        const chatBubble = document.querySelector("[data-mongodb-chat]");
+        if (chatBubble) {
+          // If widget is loaded, try to click it
+          const bubble = document.querySelector(
+            '.chat-bubble, .mongodb-chat-bubble, [class*="chat"]'
+          );
+          if (bubble) {
+            bubble.click();
+          } else {
+            alert(
+              "Chat widget is loading... Please look for the chat bubble in the bottom-right corner!"
+            );
+          }
+        } else {
+          alert(
+            "Make sure both servers are running:\n1. python start_server.py (API server on port 8000)\n2. React dev server on port 3000\nThen refresh the page!"
+          );
+        }
+      }
+
+      // Check server status on page load
+      checkServerStatus();
+
+      // Check server status every 30 seconds
+      setInterval(checkServerStatus, 30000);
+
+      // Add some interactive effects
+      document.addEventListener("DOMContentLoaded", function () {
+        // Animate feature cards on scroll
+        const observerOptions = {
+          threshold: 0.1,
+          rootMargin: "0px 0px -50px 0px",
+        };
+
+        const observer = new IntersectionObserver(function (entries) {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.style.opacity = "1";
+              entry.target.style.transform = "translateY(0)";
+            }
+          });
+        }, observerOptions);
+
+        // Observe all feature cards
+        document.querySelectorAll(".feature-card").forEach((card) => {
+          card.style.opacity = "0";
+          card.style.transform = "translateY(20px)";
+          card.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+          observer.observe(card);
+        });
+      });
+
+      // Add click handlers for sample questions
+      document.addEventListener("click", function (e) {
+        if (e.target.tagName === "SPAN" && e.target.style.background) {
+          const question = e.target.textContent;
+          // Try to open chat and pre-fill the question
+          openChatDemo();
+          // You could also try to set the input value if the widget supports it
+          setTimeout(() => {
+            const chatInput = document.querySelector(
+              'input[placeholder*="Ask"], textarea[placeholder*="Ask"]'
+            );
+            if (chatInput) {
+              chatInput.value = question;
+              chatInput.focus();
+            }
+          }, 1000);
+        }
+      });
+    </script>
+  </body>
+</html>

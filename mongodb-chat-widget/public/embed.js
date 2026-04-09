@@ -25,9 +25,10 @@
       theme: script.getAttribute("data-theme") || "default",
       position: script.getAttribute("data-position") || "bottom-right",
       primaryColor: script.getAttribute("data-primary-color") || "#00A86B",
-      title: script.getAttribute("data-title") || "MongoDB Assistant",
+      title: script.getAttribute("data-title") || "Qunix Smart Support",
       subtitle:
-        script.getAttribute("data-subtitle") || "Ask me anything about MongoDB",
+        script.getAttribute("data-subtitle") ||
+        "Hi!! How can I help you today?",
     };
   }
 
@@ -153,7 +154,7 @@
                 font-size: 14px;
                 line-height: 1.4;
               ">
-                Hello! I'm your MongoDB assistant. I can help you with MongoDB best practices, queries, indexing, performance optimization, and more. What would you like to know?
+                Hi!! How can I help you today?
               </div>
               <div style="font-size: 11px; color: #666; margin-top: 4px; opacity: 0.7;">
                 ${new Date().toLocaleTimeString([], {
@@ -173,7 +174,7 @@
             gap: 12px;
             align-items: flex-end;
           ">
-            <textarea id="chat-input" placeholder="Ask me about MongoDB..." style="
+            <textarea id="chat-input" placeholder="Ask me about TechnoNJR..." style="
               flex: 1;
               border: 1px solid #ddd;
               border-radius: 20px;

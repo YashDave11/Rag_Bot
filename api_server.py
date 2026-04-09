@@ -47,15 +47,20 @@ class MongoDBRAGAgent:
         try:
             api_key = "AIzaSyCl5ubFeNTdeqmWPu4iYOc97dec6fuCHcc"
             genai.configure(api_key=api_key)
-            self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
+            # Try different model names
+            try:
+                self.gemini_model = genai.GenerativeModel('gemini-1.5-pro')
+                print("✅ Gemini API configured with gemini-1.5-pro")
+            except:
+                self.gemini_model = genai.GenerativeModel('gemini-pro')
+                print("✅ Gemini API configured with gemini-pro")
             self.use_gemini = True
-            print("✅ Gemini API configured")
         except Exception as e:
             print(f"⚠️  Gemini API error: {e}")
             self.use_gemini = False
     
     def _load_data(self):
-        """Load MongoDB documentation data"""
+        """Load college rules and conduct data"""
         try:
             data_dir = Path(__file__).parent / "data"
             
@@ -65,7 +70,7 @@ class MongoDBRAGAgent:
             with open(data_dir / "mongodb_docs.json", "r", encoding='utf-8') as f:
                 self.full_data = json.load(f)
             
-            print(f"✅ Loaded {len(self.vector_data)} documents")
+            print(f"✅ Loaded {len(self.vector_data)} college rules")
         except Exception as e:
             print(f"❌ Error loading data: {e}")
             raise

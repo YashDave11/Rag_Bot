@@ -7,7 +7,7 @@ import {
   FaRobot,
   FaUser,
 } from "react-icons/fa";
-import { SiMongodb } from "react-icons/si";
+import { FaRobot } from "react-icons/fa";
 import { BiMinimize } from "react-icons/bi";
 import axios from "axios";
 
@@ -310,13 +310,14 @@ const MessageBubble = styled.div`
   border-radius: ${(props) =>
     props.isUser ? "20px 20px 4px 20px" : "20px 20px 20px 4px"};
   background: ${(props) =>
-    props.isUser ? "linear-gradient(135deg, #007bff, #0056b3)" : "white"};
+    props.isUser ? "linear-gradient(135deg, #cf0404, #a00303)" : "white"};
   color: ${(props) => (props.isUser ? "white" : "#333")};
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   font-size: 14px;
   line-height: 1.5;
   white-space: pre-wrap;
   word-wrap: break-word;
+  text-align: left;
   position: relative;
   border: ${(props) =>
     props.isUser ? "none" : "1px solid rgba(0, 0, 0, 0.05)"};
@@ -459,12 +460,12 @@ const PoweredBy = styled.div`
 // Main Component
 const ProfessionalChatBubble = ({
   apiUrl = "http://localhost:8000",
-  primaryColor = "#00A86B",
-  title = "MongoDB Assistant",
-  subtitle = "Ask me anything about MongoDB",
+  primaryColor = "#cf0404",
+  title = "Qunix Smart Support",
+  subtitle = "Hi!! How can I help you today?",
   position = "bottom-right",
   showPoweredBy = true,
-  welcomeMessage = "Hello! I'm your MongoDB assistant. I can help you with MongoDB best practices, queries, indexing, performance optimization, and more. What would you like to know?",
+  welcomeMessage = "Hi!! How can I help you today?",
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isMinimized, setIsMinimized] = useState(false);
@@ -584,7 +585,6 @@ const ProfessionalChatBubble = ({
               </HeaderIcon>
               <HeaderText>
                 <HeaderTitle>{title}</HeaderTitle>
-                <HeaderSubtitle>{subtitle}</HeaderSubtitle>
               </HeaderText>
             </HeaderInfo>
             <HeaderActions>
@@ -645,7 +645,7 @@ const ProfessionalChatBubble = ({
               value={inputValue}
               onChange={(e) => setInputValue(e.target.value)}
               onKeyPress={handleKeyPress}
-              placeholder="Ask me about MongoDB..."
+              placeholder="Ask me about TechnoNJR..."
               disabled={isLoading}
               primaryColor={primaryColor}
               rows={1}

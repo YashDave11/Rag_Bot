@@ -1,638 +1,450 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>
-      SmartChat AI - Create Custom Multilingual Chatbots for Any Business
-    </title>
-    <meta
-      name="description"
-      content="Build intelligent multilingual chatbots for any industry. Upload your data, train AI, and deploy to any website in minutes. 50+ languages supported."
-    />
+    <title>Qunix - Smart Support | Create Custom Multilingual Chatbots for Any Business</title>
+    <meta name="description" content="Build intelligent multilingual chatbots for any industry with Qunix Smart Support. Upload your data, train AI, and deploy to any website in minutes. 50+ languages supported." />
 
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --border: 240 5.9% 90%;
+        --primary: 240 5.9% 10%;
+        --primary-foreground: 0 0% 98%;
+        --secondary: 240 4.8% 95.9%;
+        --radius: 0.5rem;
+      }
+      * { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: 'Inter', sans-serif; background-color: hsl(var(--background)); color: hsl(var(--foreground)); line-height: 1.5; -webkit-font-smoothing: antialiased; }
+      a { text-decoration: none; color: inherit; }
+      h1, h2, h3, h4 { font-weight: 600; letter-spacing: -0.025em; }
+      
+      .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+      .flex { display: flex; }
+      .items-center { align-items: center; }
+      .justify-between { justify-content: space-between; }
+      .justify-center { justify-content: center; }
+      .flex-col { flex-direction: column; }
+      .gap-2 { gap: 0.5rem; }
+      .gap-4 { gap: 1rem; }
+      .gap-6 { gap: 1.5rem; }
+      .grid { display: grid; }
+      
+      .text-sm { font-size: 0.875rem; line-height: 1.25rem; }
+      .text-base { font-size: 1rem; line-height: 1.5rem; }
+      .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+      .text-xl { font-size: 1.25rem; line-height: 1.75rem; }
+      .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+      .text-muted { color: hsl(var(--muted-foreground)); }
+      .font-medium { font-weight: 500; }
+      .text-center { text-align: center; }
+
+      .btn { display: inline-flex; align-items: center; justify-content: center; border-radius: var(--radius); font-size: 0.875rem; font-weight: 500; height: 2.5rem; padding: 0 1rem; border: none; cursor: pointer; transition: background-color 0.2s, color 0.2s; white-space: nowrap; }
+      .btn-lg { height: 2.75rem; padding: 0 2rem; font-size: 1rem; }
+      .btn-primary { background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+      .btn-primary:hover { opacity: 0.9; }
+      .btn-secondary { background-color: transparent; border: 1px solid hsl(var(--border)); color: hsl(var(--foreground)); }
+      .btn-secondary:hover { background-color: hsl(var(--muted)); }
+      .btn-ghost { background: transparent; color: hsl(var(--foreground)); }
+      .btn-ghost:hover { background-color: hsl(var(--muted)); }
+      .btn-full { width: 100%; }
+
+      .input { display: flex; height: 2.5rem; width: 100%; border-radius: var(--radius); border: 1px solid hsl(var(--border)); background-color: transparent; padding: 0 0.75rem; font-size: 0.875rem; transition: border-color 0.2s, box-shadow 0.2s; }
+      .input:focus { outline: none; border-color: hsl(var(--primary)); box-shadow: 0 0 0 1px hsl(var(--primary)); }
+      .label { font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; display: block; }
+
+      .card { border-radius: calc(var(--radius) + 2px); border: 1px solid hsl(var(--border)); background-color: hsl(var(--background)); padding: 1.5rem; box-shadow: 0 1px 2px 0 rgba(0,0,0,0.05); }
+      .badge { display: inline-flex; align-items: center; border-radius: 9999px; border: 1px solid hsl(var(--border)); padding: 0.125rem 0.625rem; font-size: 0.75rem; font-weight: 600; background-color: hsl(var(--muted)); color: hsl(var(--foreground)); }
+
+      nav { border-bottom: 1px solid hsl(var(--border)); position: sticky; top: 0; background-color: rgba(255,255,255,0.8); backdrop-filter: blur(8px); z-index: 50; }
+      .nav-inner { height: 4rem; }
+      
+      .hero { padding: 6rem 0; text-align: center; }
+      .hero h1 { max-width: 48rem; margin: 0 auto 1.5rem; font-size: 3.5rem; line-height: 1.1; }
+      .hero p { max-width: 42rem; margin: 0 auto 2rem; font-size: 1.25rem; color: hsl(var(--muted-foreground)); }
+      .hero-stats { display: flex; justify-content: center; gap: 3rem; margin-top: 3rem; }
+      
+      .section { padding: 5rem 0; border-top: 1px solid hsl(var(--border)); }
+      .section-header { text-align: center; max-width: 36rem; margin: 0 auto 3rem; }
+
+      .grid-3 { grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; }
+
+      .pricing-toggle { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 3rem; }
+      .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+      .switch input { opacity: 0; width: 0; height: 0; }
+      .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: hsl(var(--muted)); border: 1px solid hsl(var(--border)); border-radius: 24px; transition: .2s; }
+      .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; border-radius: 50%; box-shadow: 0 1px 2px rgba(0,0,0,0.1); transition: .2s; }
+      input:checked + .slider { background-color: hsl(var(--primary)); border-color: hsl(var(--primary)); }
+      input:checked + .slider:before { transform: translateX(20px); }
+
+      .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); margin: 0; padding: 0; }
+      .modal-content { background: hsl(var(--background)); width: 100%; max-width: 400px; margin: auto; border-radius: calc(var(--radius) + 4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: 1px solid hsl(var(--border)); position: relative; }
+      .modal-header { padding: 1.5rem; border-bottom: 1px solid hsl(var(--border)); display: flex; justify-content: space-between; align-items: center; }
+      .modal-body { padding: 1.5rem; }
+      .modal-close { background: none; border: none; cursor: pointer; color: hsl(var(--muted-foreground)); }
+      .modal-close:hover { color: hsl(var(--foreground)); }
+      
+      pre { background-color: hsl(var(--primary)); color: hsl(var(--muted)); padding: 1.5rem; border-radius: var(--radius); font-family: monospace; font-size: 0.875rem; overflow-x: auto; }
+      
+      .demo-window { border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) + 4px); background: white; margin: 3rem auto 0; max-width: 800px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); overflow: hidden; text-align: left; }
+      .demo-header { background: hsl(var(--muted)); padding: 0.75rem 1rem; border-bottom: 1px solid hsl(var(--border)); display: flex; align-items: center; gap: 0.5rem; }
+      .demo-dot { width: 10px; height: 10px; border-radius: 50%; background: hsl(var(--border)); }
+      .demo-content { padding: 2rem; position: relative; min-height: 300px; }
+      .demo-chat-bubble { position: absolute; bottom: 2rem; right: 2rem; width: 50px; height: 50px; border-radius: 50%; background: hsl(var(--primary)); color: white; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); cursor: pointer; }
+      
+      footer { border-top: 1px solid hsl(var(--border)); padding: 4rem 0; }
+      .footer-grid { display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 2rem; }
+
+      .loading-spinner { border: 3px solid hsl(var(--muted)); border-top: 3px solid hsl(var(--primary)); border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; margin: 0 auto 1rem; }
+      @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+      .notification { position: fixed; top: 1.5rem; right: 1.5rem; background: hsl(var(--background)); border: 1px solid hsl(var(--border)); color: hsl(var(--foreground)); padding: 1rem 1.5rem; border-radius: var(--radius); font-size: 0.875rem; font-weight: 500; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); transform: translateX(150%); transition: transform 0.3s ease; z-index: 200; display: flex; align-items: center; gap: 0.75rem; }
+      .notification.show { transform: translateX(0); }
+
+      @media (max-width: 768px) {
+        .hero h1 { font-size: 2.5rem; }
+        .footer-grid { grid-template-columns: 1fr; }
+        .hero-stats { flex-direction: column; gap: 1rem; }
+        .nav-menu { display: none; }
+      }
+    </style>
   </head>
   <body>
     <!-- Navigation -->
-    <nav class="navbar">
-      <div class="nav-container">
-        <div class="nav-brand">
-          <span class="logo">🤖</span>
-          <span class="brand-name">SmartChat AI</span>
+    <nav>
+      <div class="container nav-inner flex items-center justify-between">
+        <a href="#" class="flex items-center gap-2 font-semibold text-lg">
+          <i data-lucide="brain-circuit"></i>
+          Qunix
+        </a>
+        <div class="nav-menu flex items-center gap-6 text-sm font-medium">
+          <a href="#features" class="text-muted hover:text-foreground transition-colors">Features</a>
+          <a href="#examples" class="text-muted hover:text-foreground transition-colors">Examples</a>
+          <a href="#pricing" class="text-muted hover:text-foreground transition-colors">Pricing</a>
+          <a href="#docs" class="text-muted hover:text-foreground transition-colors">API</a>
         </div>
-        <div class="nav-menu">
-          <a href="#features" class="nav-link">Features</a>
-          <a href="#examples" class="nav-link">Examples</a>
-          <a href="#pricing" class="nav-link">Pricing</a>
-          <a href="#docs" class="nav-link">API</a>
-          <button class="btn btn-primary" onclick="openSignupModal()">
-            Start Free Trial
-          </button>
-        </div>
-        <div class="nav-toggle" onclick="toggleMobileMenu()">
-          <span></span>
-          <span></span>
-          <span></span>
-        </div>
+        <button class="btn btn-primary" onclick="openSignupModal()">
+          Start Free Trial
+        </button>
       </div>
     </nav>
 
     <!-- Hero Section -->
-    <section class="hero">
-      <div class="hero-background">
-        <div class="hero-pattern"></div>
+    <section class="hero container">
+      <h1>Create Custom AI Chatbots for Any Business <span class="text-muted">in Minutes</span></h1>
+      <p>Upload your documents, train AI on your data, and deploy intelligent multilingual chatbots that understand your business. Support 50+ languages with enterprise-grade security.</p>
+      <div class="flex items-center justify-center gap-4">
+        <button class="btn btn-primary btn-lg flex items-center gap-2" onclick="openSignupModal()">
+          Start Free Trial
+          <i data-lucide="arrow-right" class="w-4 h-4"></i>
+        </button>
+        <a href="#demo" class="btn btn-secondary btn-lg flex items-center gap-2">
+          See Live Demo
+          <i data-lucide="play" class="w-4 h-4"></i>
+        </a>
       </div>
-      <div class="container">
-        <div class="hero-content">
-          <div class="hero-text">
-            <h1 class="hero-title">
-              Create Custom AI Chatbots for Any Business
-              <span class="highlight">in Minutes</span>
-            </h1>
-            <p class="hero-subtitle">
-              Upload your documents, train AI on your data, and deploy
-              intelligent multilingual chatbots that understand your business.
-              Support 50+ languages with enterprise-grade security.
-            </p>
-            <div class="hero-buttons">
-              <button
-                class="btn btn-primary btn-large"
-                onclick="openSignupModal()"
-              >
-                Start Free Trial
-                <span class="btn-icon">→</span>
-              </button>
-              <button
-                class="btn btn-secondary btn-large"
-                onclick="scrollToDemo()"
-              >
-                See Live Demo
-                <span class="btn-icon">▶</span>
-              </button>
-            </div>
-            <div class="hero-stats">
-              <div class="stat">
-                <span class="stat-number">50+</span>
-                <span class="stat-label">Languages</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">15,000+</span>
-                <span class="stat-label">Businesses</span>
-              </div>
-              <div class="stat">
-                <span class="stat-number">2M+</span>
-                <span class="stat-label">Conversations</span>
-              </div>
-            </div>
-          </div>
-          <div class="hero-demo">
-            <div class="demo-window">
-              <div class="demo-header">
-                <div class="demo-dots">
-                  <span></span>
-                  <span></span>
-                  <span></span>
-                </div>
-                <span class="demo-title">your-website.com</span>
-              </div>
-              <div class="demo-content">
-                <h3>🛍️ E-commerce Store</h3>
-                <p>Premium products and customer service...</p>
-
-                <!-- Animated Chat Widget -->
-                <div class="demo-chat-widget">
-                  <div class="demo-chat-bubble">💬</div>
-                  <div class="demo-chat-window">
-                    <div class="demo-chat-header">
-                      <span>Shopping Assistant</span>
-                      <div class="language-indicator">🇺🇸 EN</div>
-                    </div>
-                    <div class="demo-messages">
-                      <div class="demo-message bot">
-                        Hi! I can help you find the perfect product. What are
-                        you looking for?
-                      </div>
-                      <div class="demo-message user">
-                        I need a laptop for work
-                      </div>
-                      <div class="demo-message bot typing">
-                        <span class="typing-dots">
-                          <span></span>
-                          <span></span>
-                          <span></span>
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
+      <div class="hero-stats">
+        <div><div class="text-3xl font-semibold">50+</div><div class="text-sm text-muted">Languages</div></div>
+        <div><div class="text-3xl font-semibold">15,000+</div><div class="text-sm text-muted">Businesses</div></div>
+        <div><div class="text-3xl font-semibold">2M+</div><div class="text-sm text-muted">Conversations</div></div>
+      </div>
+      
+      <div class="demo-window" id="demo">
+        <div class="demo-header">
+          <div class="demo-dot"></div><div class="demo-dot"></div><div class="demo-dot"></div>
+          <span class="text-sm ml-2 font-medium text-muted">your-website.com</span>
+        </div>
+        <div class="demo-content">
+          <h3 class="text-xl mb-4 flex items-center gap-2"><i data-lucide="shopping-bag"></i> E-commerce Store</h3>
+          <p class="text-muted mb-4">Premium products and customer service...</p>
+          <div class="demo-chat-bubble" title="Chat Demo">
+            <i data-lucide="message-square"></i>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Integration Section -->
-    <section class="integration" id="integration">
+    <section class="section bg-slate-50">
       <div class="container">
         <div class="section-header">
-          <h2>Integration So Simple, It's Almost Magical</h2>
-          <p>
-            Add our MongoDB assistant to any website with just one line of code
-          </p>
+          <h2 class="text-3xl mb-4">Integration So Simple, It's Magical</h2>
+          <p class="text-lg text-muted">Add our Qunix assistant to any website with just one line of code</p>
         </div>
-
-        <div class="integration-steps">
-          <div class="step">
-            <div class="step-number">1</div>
-            <div class="step-content">
-              <h3>Sign Up & Get Your Code</h3>
-              <p>
-                Create your free account and get your personalized embed code
-              </p>
-            </div>
+        <div class="grid grid-3 mb-12">
+          <div class="flex flex-col items-center text-center">
+            <div class="w-12 h-12 flex items-center justify-center rounded-full border mb-4 font-semibold text-lg">1</div>
+            <h3 class="mb-2">Sign Up</h3>
+            <p class="text-sm text-muted">Create your free account and get your personalized embed code.</p>
           </div>
-          <div class="step">
-            <div class="step-number">2</div>
-            <div class="step-content">
-              <h3>Copy & Paste</h3>
-              <p>Add the script tag to your website's HTML</p>
-            </div>
+          <div class="flex flex-col items-center text-center">
+            <div class="w-12 h-12 flex items-center justify-center rounded-full border mb-4 font-semibold text-lg">2</div>
+            <h3 class="mb-2">Copy & Paste</h3>
+            <p class="text-sm text-muted">Add the script tag to your website's HTML before the body closes.</p>
           </div>
-          <div class="step">
-            <div class="step-number">3</div>
-            <div class="step-content">
-              <h3>Done!</h3>
-              <p>Your MongoDB assistant is live and ready to help users</p>
-            </div>
+          <div class="flex flex-col items-center text-center">
+            <div class="w-12 h-12 flex items-center justify-center rounded-full border mb-4 font-semibold text-lg">3</div>
+            <h3 class="mb-2">Done!</h3>
+            <p class="text-sm text-muted">Your assistant is live and ready to help users immediately.</p>
           </div>
         </div>
-
-        <div class="code-showcase">
-          <div class="code-window">
-            <div class="code-header">
-              <div class="code-dots">
-                <span></span>
-                <span></span>
-                <span></span>
-              </div>
-              <span class="code-title">index.html</span>
-            </div>
-            <div class="code-content">
-              <pre><code>&lt;!-- Add this one line to your website --&gt;
-&lt;script src="https://chatmongo.com/widget.js" 
-        data-key="<span class="highlight">your-unique-key</span>"&gt;&lt;/script&gt;</code></pre>
-            </div>
+        <div class="card max-w-3xl mx-auto p-0 overflow-hidden">
+          <div class="bg-muted px-4 py-2 border-b flex items-center gap-2">
+            <i data-lucide="code-2" width="16" height="16"></i> <span class="text-sm font-medium">index.html</span>
           </div>
-          <div class="code-result">
-            <div class="result-arrow">→</div>
-            <div class="result-text">
-              <h4>Instant MongoDB Expert</h4>
-              <p>
-                Your users can now ask MongoDB questions and get intelligent,
-                contextual answers powered by advanced AI.
-              </p>
-            </div>
-          </div>
+          <pre class="m-0 rounded-none border-0 text-primary-foreground">&lt;!-- Add this one line to your website --&gt;
+&lt;script src="https://qunix.com/widget.js" data-key="your-unique-key"&gt;&lt;/script&gt;</pre>
         </div>
       </div>
     </section>
 
     <!-- Features Section -->
-    <section class="features" id="features">
+    <section class="section" id="features">
       <div class="container">
         <div class="section-header">
-          <h2>Everything You Need to Build Intelligent Chatbots</h2>
-          <p>
-            From document upload to multilingual deployment - we handle the
-            complexity
-          </p>
+          <h2 class="text-3xl mb-4">Everything You Need</h2>
+          <p class="text-lg text-muted">From document upload to multilingual deployment - we handle the complexity.</p>
         </div>
-
-        <div class="features-grid">
-          <div class="feature-card">
-            <div class="feature-icon">📄</div>
-            <h3>Smart Document Processing</h3>
-            <p>
-              Upload PDFs, Word docs, websites, or databases. Our AI
-              automatically extracts and structures knowledge for optimal
-              chatbot training.
-            </p>
+        <div class="grid grid-3">
+          <div class="card flex flex-col gap-4">
+            <i data-lucide="file-text" width="24" height="24"></i>
+            <h3 class="text-lg">Smart Document Processing</h3>
+            <p class="text-sm text-muted">Upload PDFs, Word docs, websites, or databases. Our AI automatically extracts and structures knowledge.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🧠</div>
-            <h3>Advanced AI Training</h3>
-            <p>
-              Powered by GPT-4, Claude, and Gemini. RAG technology ensures
-              accurate, contextual responses based on your specific data.
-            </p>
+          <div class="card flex flex-col gap-4">
+            <i data-lucide="brain" width="24" height="24"></i>
+            <h3 class="text-lg">Advanced AI Training</h3>
+            <p class="text-sm text-muted">Powered by state-of-the-art models. RAG technology ensures accurate, contextual responses based on your data.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🌍</div>
-            <h3>50+ Languages</h3>
-            <p>
-              Automatic translation and multilingual support. Your chatbot can
-              communicate in any language your customers prefer.
-            </p>
+          <div class="card flex flex-col gap-4">
+            <i data-lucide="globe-2" width="24" height="24"></i>
+            <h3 class="text-lg">50+ Languages</h3>
+            <p class="text-sm text-muted">Automatic translation and multilingual support across the board without extra configuration.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🎨</div>
-            <h3>Complete Customization</h3>
-            <p>
-              Brand colors, logos, personalities, and conversation flows. Make
-              the chatbot truly yours with our visual editor.
-            </p>
+          <div class="card flex flex-col gap-4">
+            <i data-lucide="palette" width="24" height="24"></i>
+            <h3 class="text-lg">Complete Customization</h3>
+            <p class="text-sm text-muted">Make the chatbot perfectly blend into your brand with full control over aesthetics and personality.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">📊</div>
-            <h3>Advanced Analytics</h3>
-            <p>
-              Real-time insights, conversation analytics, user satisfaction
-              scores, and performance metrics with detailed reporting.
-            </p>
+          <div class="card flex flex-col gap-4">
+            <i data-lucide="bar-chart-3" width="24" height="24"></i>
+            <h3 class="text-lg">Advanced Analytics</h3>
+            <p class="text-sm text-muted">Real-time insights, satisfaction scores, and granular performance metrics with detailed reporting.</p>
           </div>
-
-          <div class="feature-card">
-            <div class="feature-icon">🔌</div>
-            <h3>Easy Integration</h3>
-            <p>
-              One-line embed code, REST API, webhooks, and integrations with
-              Slack, Teams, WhatsApp, and 100+ platforms.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Live Demo Section -->
-    <section class="demo-section" id="demo">
-      <div class="container">
-        <div class="section-header">
-          <h2>See Real Examples</h2>
-          <p>
-            Explore how businesses across different industries use our AI
-            chatbots
-          </p>
-        </div>
-
-        <div class="examples-grid" id="examples">
-          <div class="example-card">
-            <div class="example-icon">🛍️</div>
-            <h3>E-commerce</h3>
-            <p>Product recommendations, order tracking, customer support</p>
-            <div class="example-stats">
-              <span>40% faster support</span>
-              <span>25% more sales</span>
-            </div>
-          </div>
-
-          <div class="example-card">
-            <div class="example-icon">🏥</div>
-            <h3>Healthcare</h3>
-            <p>
-              Patient inquiries, appointment scheduling, medical information
-            </p>
-            <div class="example-stats">
-              <span>60% fewer calls</span>
-              <span>HIPAA compliant</span>
-            </div>
-          </div>
-
-          <div class="example-card">
-            <div class="example-icon">🎓</div>
-            <h3>Education</h3>
-            <p>Student support, course information, learning assistance</p>
-            <div class="example-stats">
-              <span>24/7 availability</span>
-              <span>90% satisfaction</span>
-            </div>
-          </div>
-
-          <div class="example-card">
-            <div class="example-icon">💾</div>
-            <h3>Technical Documentation</h3>
-            <p>
-              MongoDB guides, API help, developer resources (like our original
-              MongoDB assistant)
-            </p>
-            <div class="example-stats">
-              <span>Developer-friendly</span>
-              <span>Instant answers</span>
-            </div>
-          </div>
-
-          <div class="example-card">
-            <div class="example-icon">🏦</div>
-            <h3>Finance</h3>
-            <p>Account inquiries, transaction help, financial advice</p>
-            <div class="example-stats">
-              <span>Bank-grade security</span>
-              <span>Regulatory compliant</span>
-            </div>
-          </div>
-
-          <div class="example-card">
-            <div class="example-icon">🏨</div>
-            <h3>Hospitality</h3>
-            <p>Booking assistance, local recommendations, guest services</p>
-            <div class="example-stats">
-              <span>Multilingual</span>
-              <span>24/7 concierge</span>
-            </div>
+          <div class="card flex flex-col gap-4">
+            <i data-lucide="blocks" width="24" height="24"></i>
+            <h3 class="text-lg">Easy Integration</h3>
+            <p class="text-sm text-muted">REST API, webhooks, and integrations with Slack, Teams, WhatsApp, and 100+ platforms effortlessly.</p>
           </div>
         </div>
       </div>
     </section>
 
     <!-- Pricing Section -->
-    <section class="pricing" id="pricing">
+    <section class="section bg-slate-50" id="pricing">
       <div class="container">
         <div class="section-header">
-          <h2>Simple, Transparent Pricing</h2>
-          <p>Start free, scale as you grow. No hidden fees, cancel anytime.</p>
+          <h2 class="text-3xl mb-4">Simple, Transparent Pricing</h2>
+          <p class="text-lg text-muted">Start free, scale as you grow. No hidden fees, cancel anytime.</p>
         </div>
-
+        
         <div class="pricing-toggle">
-          <span class="toggle-label">Monthly</span>
-          <label class="toggle-switch">
-            <input type="checkbox" id="pricing-toggle" />
-            <span class="toggle-slider"></span>
+          <span class="text-sm font-medium">Monthly</span>
+          <label class="switch">
+            <input type="checkbox" id="pricing-toggle" onchange="togglePricing()" />
+            <span class="slider"></span>
           </label>
-          <span class="toggle-label"
-            >Annual <span class="discount">Save 20%</span></span
-          >
+          <span class="text-sm font-medium">Annual <span class="badge ml-2 bg-primary text-primary-foreground">Save 20%</span></span>
         </div>
 
-        <div class="pricing-grid">
-          <div class="pricing-card">
-            <div class="pricing-header">
-              <h3>Starter</h3>
-              <div class="price">
-                <span class="currency">$</span>
-                <span class="amount">0</span>
-                <span class="period">/month</span>
-              </div>
-              <p>Perfect for small websites and blogs</p>
+        <div class="grid grid-3">
+          <div class="card flex flex-col">
+            <div class="mb-4">
+              <h3 class="text-xl mb-2">Starter</h3>
+              <div class="text-3xl font-bold mb-2">$0 <span class="text-sm font-normal text-muted">/month</span></div>
+              <p class="text-sm text-muted">Perfect for small websites and blogs</p>
             </div>
-            <div class="pricing-features">
-              <div class="feature">✅ 1 chatbot</div>
-              <div class="feature">✅ 500 conversations/month</div>
-              <div class="feature">✅ 10MB data upload</div>
-              <div class="feature">✅ 5 languages</div>
-              <div class="feature">✅ Basic customization</div>
-              <div class="feature">✅ Email support</div>
+            <div class="flex-1 flex flex-col gap-3 text-sm mb-6">
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> 1 chatbot</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> 500 convos/mo</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> 10MB data limit</div>
             </div>
-            <button class="btn btn-outline" onclick="selectPlan('starter')">
-              Get Started Free
-            </button>
+            <button class="btn btn-secondary btn-full" onclick="openSignupModal()">Get Started Free</button>
           </div>
-
-          <div class="pricing-card featured">
-            <div class="pricing-badge">Most Popular</div>
-            <div class="pricing-header">
-              <h3>Professional</h3>
-              <div class="price">
-                <span class="currency">$</span>
-                <span class="amount monthly">49</span>
-                <span class="amount annual" style="display: none">37</span>
-                <span class="period">/month</span>
+          <div class="card flex flex-col border-primary shadow-md relative">
+            <div class="absolute top-0 right-1/2 translate-x-1/2 -translate-y-1/2 badge bg-primary text-primary-foreground">Most Popular</div>
+            <div class="mb-4">
+              <h3 class="text-xl mb-2">Professional</h3>
+              <div class="text-3xl font-bold mb-2">
+                $<span class="amount-monthly">49</span><span class="amount-annual" style="display:none">39</span> 
+                <span class="text-sm font-normal text-muted">/month</span>
               </div>
-              <p>For growing businesses and teams</p>
+              <p class="text-sm text-muted">For growing businesses and teams</p>
             </div>
-            <div class="pricing-features">
-              <div class="feature">✅ 5 chatbots</div>
-              <div class="feature">✅ 10,000 conversations/month</div>
-              <div class="feature">✅ 500MB data upload</div>
-              <div class="feature">✅ 50+ languages</div>
-              <div class="feature">✅ Full customization</div>
-              <div class="feature">✅ Analytics dashboard</div>
-              <div class="feature">✅ API access</div>
-              <div class="feature">✅ Priority support</div>
+            <div class="flex-1 flex flex-col gap-3 text-sm mb-6">
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> 5 chatbots</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> 10k convos/mo</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> 500MB data limit</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> Analytics</div>
             </div>
-            <button
-              class="btn btn-primary"
-              onclick="selectPlan('professional')"
-            >
-              Start Free Trial
-            </button>
+            <button class="btn btn-primary btn-full" onclick="openSignupModal()">Start Free Trial</button>
           </div>
-
-          <div class="pricing-card">
-            <div class="pricing-header">
-              <h3>Enterprise</h3>
-              <div class="price">
-                <span class="currency">$</span>
-                <span class="amount">199</span>
-                <span class="period">/month</span>
-              </div>
-              <p>For large organizations</p>
+          <div class="card flex flex-col">
+            <div class="mb-4">
+              <h3 class="text-xl mb-2">Enterprise</h3>
+              <div class="text-3xl font-bold mb-2">$199 <span class="text-sm font-normal text-muted">/month</span></div>
+              <p class="text-sm text-muted">For large organizations requiring scale</p>
             </div>
-            <div class="pricing-features">
-              <div class="feature">✅ Unlimited chatbots</div>
-              <div class="feature">✅ Unlimited conversations</div>
-              <div class="feature">✅ Unlimited data upload</div>
-              <div class="feature">✅ All languages</div>
-              <div class="feature">✅ White-label solution</div>
-              <div class="feature">✅ Advanced analytics</div>
-              <div class="feature">✅ Custom integrations</div>
-              <div class="feature">✅ Dedicated support</div>
-              <div class="feature">✅ SLA guarantee</div>
-              <div class="feature">✅ On-premise option</div>
+            <div class="flex-1 flex flex-col gap-3 text-sm mb-6">
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> Unlimited chatbots</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> Unlimited convos</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> Unlimited data</div>
+              <div class="flex items-center gap-2"><i data-lucide="check" width="16" height="16"></i> SLA Guarantee</div>
             </div>
-            <button class="btn btn-outline" onclick="selectPlan('enterprise')">
-              Contact Sales
-            </button>
+            <button class="btn btn-secondary btn-full" onclick="openSignupModal()">Contact Sales</button>
           </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- CTA Section -->
-    <section class="cta-section">
-      <div class="container">
-        <div class="cta-content">
-          <h2>Ready to Transform Your Customer Experience?</h2>
-          <p>
-            Join 15,000+ businesses using SmartChat AI to provide instant,
-            intelligent customer support in any language
-          </p>
-          <button class="btn btn-primary btn-large" onclick="openSignupModal()">
-            Create Your AI Chatbot Free
-            <span class="btn-icon">→</span>
-          </button>
-          <p class="cta-note">
-            No credit card required • 14-day free trial • Cancel anytime
-          </p>
         </div>
       </div>
     </section>
 
     <!-- Footer -->
-    <footer class="footer">
-      <div class="container">
-        <div class="footer-content">
-          <div class="footer-brand">
-            <div class="footer-logo">
-              <span class="logo">🤖</span>
-              <span class="brand-name">SmartChat AI</span>
-            </div>
-            <p>
-              The most advanced platform for creating intelligent, multilingual
-              chatbots for any business.
-            </p>
+    <footer>
+      <div class="container footer-grid">
+        <div>
+          <div class="flex items-center gap-2 font-semibold text-lg mb-4">
+            <i data-lucide="brain-circuit"></i> Qunix
           </div>
-          <div class="footer-links">
-            <div class="footer-column">
-              <h4>Product</h4>
-              <a href="#features">Features</a>
-              <a href="#pricing">Pricing</a>
-              <a href="#docs">Documentation</a>
-              <a href="#api">API</a>
-            </div>
-            <div class="footer-column">
-              <h4>Company</h4>
-              <a href="#about">About</a>
-              <a href="#blog">Blog</a>
-              <a href="#careers">Careers</a>
-              <a href="#contact">Contact</a>
-            </div>
-            <div class="footer-column">
-              <h4>Support</h4>
-              <a href="#help">Help Center</a>
-              <a href="#status">Status</a>
-              <a href="#security">Security</a>
-              <a href="#privacy">Privacy</a>
-            </div>
-          </div>
+          <p class="text-sm text-muted mb-4">The most advanced platform for creating intelligent, multilingual chatbots for any business.</p>
+          <p class="text-xs text-muted">&copy; 2024 Qunix. All rights reserved.</p>
         </div>
-        <div class="footer-bottom">
-          <p>&copy; 2024 ChatMongo. All rights reserved.</p>
-          <div class="footer-social">
-            <a href="#" class="social-link">Twitter</a>
-            <a href="#" class="social-link">LinkedIn</a>
-            <a href="#" class="social-link">GitHub</a>
-          </div>
+        <div class="flex flex-col gap-3 text-sm">
+          <div class="font-semibold mb-1">Product</div>
+          <a href="#features" class="text-muted hover:text-foreground">Features</a>
+          <a href="#pricing" class="text-muted hover:text-foreground">Pricing</a>
+          <a href="#docs" class="text-muted hover:text-foreground">API</a>
+        </div>
+        <div class="flex flex-col gap-3 text-sm">
+          <div class="font-semibold mb-1">Company</div>
+          <a href="#" class="text-muted hover:text-foreground">About</a>
+          <a href="#" class="text-muted hover:text-foreground">Blog</a>
+          <a href="#" class="text-muted hover:text-foreground">Careers</a>
+        </div>
+        <div class="flex flex-col gap-3 text-sm">
+          <div class="font-semibold mb-1">Support</div>
+          <a href="#" class="text-muted hover:text-foreground">Help Center</a>
+          <a href="#" class="text-muted hover:text-foreground">Status</a>
+          <a href="#" class="text-muted hover:text-foreground">Security</a>
         </div>
       </div>
     </footer>
 
     <!-- Signup Modal -->
-    <div class="modal" id="signup-modal">
+    <div class="modal-overlay" id="signup-modal">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>🚀 Create Your AI Chatbot</h3>
-          <button class="modal-close" onclick="closeSignupModal()">
-            &times;
-          </button>
+          <div class="font-semibold text-lg flex items-center gap-2"><i data-lucide="rocket" width="20" height="20"></i> Free Trial</div>
+          <button class="modal-close" onclick="closeSignupModal()"><i data-lucide="x" width="20" height="20"></i></button>
         </div>
         <div class="modal-body">
-          <form class="signup-form" onsubmit="handleSignup(event)">
-            <div class="form-group">
-              <label for="email">Email Address</label>
-              <input
-                type="email"
-                id="email"
-                required
-                placeholder="your@email.com"
-              />
+          <div class="bg-muted p-4 rounded-md mb-6 text-sm">
+            <div class="font-medium mb-2">Included:</div>
+            <div class="flex items-center gap-2 text-muted-foreground"><i data-lucide="check" width="14" height="14"></i> 300 free messages</div>
+            <div class="flex items-center gap-2 text-muted-foreground"><i data-lucide="check" width="14" height="14"></i> PDF Upload</div>
+            <div class="flex items-center gap-2 text-muted-foreground"><i data-lucide="check" width="14" height="14"></i> Custom Chatbot Widget</div>
+          </div>
+          <form id="signup-form" onsubmit="processSignup(event)">
+            <div class="mb-4">
+              <label for="email" class="label">Email Address</label>
+              <input type="email" id="email" class="input" required placeholder="your@email.com" />
             </div>
-            <div class="form-group">
-              <label for="company">Company Name</label>
-              <input
-                type="text"
-                id="company"
-                required
-                placeholder="Your Company"
-              />
-            </div>
-            <div class="form-group">
-              <label for="industry">Industry</label>
-              <select id="industry" required>
-                <option value="">Select your industry</option>
-                <option value="ecommerce">E-commerce</option>
-                <option value="healthcare">Healthcare</option>
-                <option value="education">Education</option>
-                <option value="finance">Finance</option>
-                <option value="hospitality">Hospitality</option>
-                <option value="technology">Technology</option>
-                <option value="documentation">Technical Documentation</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label for="use-case">Primary Use Case</label>
-              <select id="use-case" required>
-                <option value="">What will your chatbot do?</option>
-                <option value="customer-support">Customer Support</option>
-                <option value="sales">Sales & Lead Generation</option>
-                <option value="faq">FAQ & Information</option>
-                <option value="booking">Booking & Scheduling</option>
-                <option value="ecommerce">Product Recommendations</option>
-                <option value="documentation">Documentation Help</option>
-                <option value="other">Other</option>
-              </select>
-            </div>
-            <button type="submit" class="btn btn-primary btn-full">
-              Create My Chatbot Free
-            </button>
+            <button type="submit" class="btn btn-primary btn-full" id="signup-btn">Start Free Trial</button>
+            <p class="text-xs text-center text-muted mt-4">No credit card required.</p>
           </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Widget Code Modal -->
-    <div class="modal" id="widget-modal">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h3>🎉 Your Widget is Ready!</h3>
-          <button class="modal-close" onclick="closeWidgetModal()">
-            &times;
-          </button>
-        </div>
-        <div class="modal-body">
-          <p>Copy this code and paste it into your website's HTML:</p>
-          <div class="code-block">
-            <code id="widget-code"></code>
-            <button class="copy-btn" onclick="copyWidgetCode()">Copy</button>
-          </div>
-          <div class="widget-instructions">
-            <h4>Next Steps:</h4>
-            <ol>
-              <li>Paste the code before the closing &lt;/body&gt; tag</li>
-              <li>Save and publish your website</li>
-              <li>The chat widget will appear automatically!</li>
-            </ol>
-          </div>
-          <div class="widget-dashboard">
-            <p>Manage your widget and view analytics:</p>
-            <button class="btn btn-secondary" onclick="openDashboard()">
-              Go to Dashboard
-            </button>
+          <div id="signup-loading" style="display: none; text-align: center; padding: 1rem;">
+            <div class="loading-spinner"></div>
+            <p class="text-sm font-medium">Creating account...</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Live Chat Widget (Demo) -->
-    <script
-      src="http://localhost:3000/embed.js"
-      data-mongodb-chat
-      data-api-url="http://localhost:8000"
-      data-title="ChatMongo Demo"
-      data-welcome-message="Try asking about MongoDB!"
-      data-primary-color="#00A86B"
-      data-position="bottom-right"
-    ></script>
+    <!-- Notification Toast -->
+    <div id="toast" class="notification">
+      <i data-lucide="info" width="18" height="18"></i>
+      <span id="toast-msg">Notification</span>
+    </div>
 
+    <!-- Scripts -->
+    <script>
+      lucide.createIcons();
+
+      function togglePricing() {
+        const isAnnual = document.getElementById('pricing-toggle').checked;
+        const monthlyEls = document.querySelectorAll('.amount-monthly');
+        const annualEls = document.querySelectorAll('.amount-annual');
+        if (isAnnual) {
+          monthlyEls.forEach(el => el.style.display = 'none');
+          annualEls.forEach(el => el.style.display = 'inline');
+        } else {
+          monthlyEls.forEach(el => el.style.display = 'inline');
+          annualEls.forEach(el => el.style.display = 'none');
+        }
+      }
+
+      function openSignupModal() {
+        document.getElementById("signup-modal").style.display = "flex";
+      }
+
+      function closeSignupModal() {
+        document.getElementById("signup-modal").style.display = "none";
+        document.getElementById("signup-form").style.display = "block";
+        document.getElementById("signup-loading").style.display = "none";
+        document.getElementById("email").value = "";
+      }
+
+      function showNotification(message) {
+        const toast = document.getElementById("toast");
+        document.getElementById("toast-msg").textContent = message;
+        toast.classList.add("show");
+        setTimeout(() => toast.classList.remove("show"), 3000);
+      }
+
+      function processSignup(event) {
+        event.preventDefault();
+        const email = document.getElementById("email").value;
+        const form = document.getElementById("signup-form");
+        const loading = document.getElementById("signup-loading");
+
+        if (!email.includes("@")) {
+          showNotification("Invalid email address.");
+          return;
+        }
+
+        form.style.display = "none";
+        loading.style.display = "block";
+
+        localStorage.setItem("userEmail", email);
+        localStorage.setItem("signupDate", new Date().toISOString());
+
+        setTimeout(() => {
+          showNotification("Welcome! Redirecting...");
+          setTimeout(() => {
+            window.location.href = "dashboard.html";
+          }, 1000);
+        }, 1500);
+      }
+
+      document.getElementById("signup-modal").addEventListener("click", function (e) {
+        if (e.target === this) closeSignupModal();
+      });
+    </script>
+    <script src="http://localhost:3000/embed.js" data-mongodb-chat data-api-url="http://localhost:8000" data-title="Qunix Smart Support Demo" data-primary-color="#09090b" data-position="bottom-right"></script>
     <script src="script.js"></script>
   </body>
 </html>

@@ -16,8 +16,8 @@
     widgetUrl: "http://localhost:3000", // Your widget hosting URL
     defaultTheme: {
       primaryColor: "#00A86B",
-      title: "MongoDB Assistant",
-      subtitle: "Ask me anything about MongoDB",
+      title: "Qunix Smart Support",
+      subtitle: "Hi!! How can I help you today?",
       position: "bottom-right",
     },
   };
@@ -416,7 +416,7 @@
           </div>
           <div class="mongodb-chat-messages" id="chat-messages"></div>
           <div class="mongodb-chat-input-container">
-            <textarea class="mongodb-chat-input" id="chat-input" placeholder="Ask me about MongoDB..." rows="1"></textarea>
+            <textarea class="mongodb-chat-input" id="chat-input" placeholder="Ask me about TechnoNJR..." rows="1"></textarea>
             <button class="mongodb-chat-send" id="chat-send">➤</button>
           </div>
         </div>
@@ -425,8 +425,7 @@
 
       // Add welcome message
       this.addMessage(
-        this.config.welcomeMessage ||
-          "Hello! I'm your MongoDB assistant. I can help you with MongoDB best practices, queries, indexing, performance optimization, and more. What would you like to know?",
+        this.config.welcomeMessage || "Hi!! How can I help you today?",
         false
       );
     }

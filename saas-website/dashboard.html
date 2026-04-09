@@ -1,543 +1,1009 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dashboard - ChatMongo</title>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
-      rel="stylesheet"
-    />
-    <style>
-      * {
-        margin: 0;
-        padding: 0;
-        box-sizing: border-box;
-      }
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - Qunix</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    :root {
+      --background: 0 0% 100%;
+      --foreground: 240 10% 3.9%;
+      --muted: 240 4.8% 95.9%;
+      --muted-foreground: 240 3.8% 46.1%;
+      --border: 240 5.9% 90%;
+      --primary: 240 5.9% 10%;
+      --primary-foreground: 0 0% 98%;
+      --radius: 0.5rem;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Inter', sans-serif; background-color: hsl(var(--background)); color: hsl(var(--foreground)); -webkit-font-smoothing: antialiased; }
 
-      body {
-        font-family: "Inter", sans-serif;
-        background: #f8f9fa;
-        color: #333;
-      }
+    /* Layout */
+    .app-layout { display: flex; height: 100vh; overflow: hidden; }
+    .sidebar { width: 250px; border-right: 1px solid hsl(var(--border)); display: flex; flex-direction: column; background: hsl(var(--background)); }
+    .sidebar-header { height: 4rem; display: flex; align-items: center; padding: 0 1.5rem; border-bottom: 1px solid hsl(var(--border)); font-weight: 600; font-size: 1.125rem; gap: 0.5rem; }
+    .sidebar-nav { flex: 1; padding: 1.5rem 1rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    .sidebar-link { display: flex; align-items: center; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: var(--radius); font-size: 0.875rem; font-weight: 500; color: hsl(var(--muted-foreground)); transition: 0.2s; cursor: pointer; text-decoration: none; }
+    .sidebar-link.active { background-color: hsl(var(--muted)); color: hsl(var(--foreground)); }
+    .sidebar-link:hover { background-color: hsl(var(--muted)); color: hsl(var(--foreground)); }
+    
+    .sidebar-footer { padding: 1.5rem 1rem; border-top: 1px solid hsl(var(--border)); }
 
-      .dashboard-header {
-        background: white;
-        border-bottom: 1px solid #e1e5e9;
-        padding: 1rem 0;
-      }
+    .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #fafafa; }
+    .top-header { height: 4rem; display: flex; align-items: center; justify-content: flex-end; padding: 0 2rem; border-bottom: 1px solid hsl(var(--border)); background: hsl(var(--background)); }
+    .scroll-area { flex: 1; overflow-y: auto; padding: 2rem; }
+    .max-w-6xl { max-width: 1152px; margin: 0 auto; }
 
-      .header-content {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 0 20px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
+    /* Typography & Utilities */
+    .text-sm { font-size: 0.875rem; }
+    .text-lg { font-size: 1.125rem; }
+    .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+    .text-3xl { font-size: 1.875rem; line-height: 2.25rem; }
+    .text-muted { color: hsl(var(--muted-foreground)); }
+    .font-semibold { font-weight: 600; }
+    .font-medium { font-weight: 500; }
+    .mb-2 { margin-bottom: 0.5rem; }
+    .mb-4 { margin-bottom: 1rem; }
+    .mb-6 { margin-bottom: 1.5rem; }
+    .mb-8 { margin-bottom: 2rem; }
+    .flex { display: flex; }
+    .items-center { align-items: center; }
+    .justify-between { justify-content: space-between; }
+    .gap-2 { gap: 0.5rem; }
+    .gap-4 { gap: 1rem; }
+    .gap-6 { gap: 1.5rem; }
+    .grid { display: grid; }
+    .grid-4 { grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); }
+    
+    /* Components */
+    .btn { display: inline-flex; align-items: center; justify-content: center; gap: 0.5rem; border-radius: var(--radius); font-size: 0.875rem; font-weight: 500; height: 2.5rem; padding: 0 1rem; border: none; cursor: pointer; transition: 0.2s; text-decoration: none; }
+    .btn-primary { background-color: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+    .btn-primary:hover { opacity: 0.9; }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+    .btn-secondary { background-color: transparent; border: 1px solid hsl(var(--border)); color: hsl(var(--foreground)); }
+    .btn-secondary:hover:not(:disabled) { background-color: hsl(var(--muted)); }
+    
+    .card { background: hsl(var(--background)); border: 1px solid hsl(var(--border)); border-radius: calc(var(--radius) + 2px); padding: 1.5rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .card-header { margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid hsl(var(--border)); display: flex; justify-content: space-between; align-items: center; }
+    .card-title { font-weight: 600; font-size: 1rem; }
 
-      .logo {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        font-weight: 700;
-        font-size: 1.5rem;
-        color: #00a86b;
-      }
+    /* Modal */
+    .modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background-color: rgba(0,0,0,0.4); display: none; align-items: center; justify-content: center; z-index: 100; backdrop-filter: blur(4px); }
+    .modal-content { background: hsl(var(--background)); width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; border-radius: calc(var(--radius) + 4px); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1); border: 1px solid hsl(var(--border)); margin: auto; position: relative; }
+    .modal-header { padding: 1.5rem; border-bottom: 1px solid hsl(var(--border)); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; background: hsl(var(--background)); z-index: 10; }
+    .modal-body { padding: 2rem; }
+    .modal-close { background: none; border: none; cursor: pointer; color: hsl(var(--muted-foreground)); }
+    .modal-close:hover { color: hsl(var(--foreground)); }
+    
+    /* Wizard Steps */
+    .step-header { text-align: center; margin-bottom: 2rem; }
+    .step-actions { display: flex; justify-content: space-between; margin-top: 2rem; border-top: 1px solid hsl(var(--border)); padding-top: 1.5rem; }
+    
+    .upload-area { border: 2px dashed hsl(var(--border)); border-radius: var(--radius); padding: 3rem 2rem; text-align: center; cursor: pointer; transition: 0.2s; background: hsl(var(--background)); }
+    .upload-area:hover { border-color: hsl(var(--primary)); background: #fafafa; }
+    
+    .progress-bar { width: 100%; height: 6px; background: hsl(var(--muted)); border-radius: 3px; overflow: hidden; margin: 1rem 0; }
+    .progress-fill { height: 100%; background: hsl(var(--primary)); width: 0%; transition: width 0.3s; }
+    
+    /* Config layout */
+    .config-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
+    .form-group { margin-bottom: 1.5rem; }
+    .label { display: block; font-size: 0.875rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .input { display: flex; height: 2.5rem; width: 100%; border-radius: var(--radius); border: 1px solid hsl(var(--border)); background: transparent; padding: 0 0.75rem; font-size: 0.875rem; }
+    .input:focus { outline: none; border-color: hsl(var(--primary)); box-shadow: 0 0 0 1px hsl(var(--primary)); }
+    
+    /* Config Preview */
+    .preview-box { border: 1px solid hsl(var(--border)); border-radius: var(--radius); background: #fafafa; height: 400px; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center; }
+    
+    .chat-bubble-preview { position: absolute; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+    .chat-bubble-preview.size-small { width: 50px; height: 50px; border-radius: 25px; }
+    .chat-bubble-preview.size-medium { width: 60px; height: 60px; border-radius: 30px; }
+    .chat-bubble-preview.size-large { width: 70px; height: 70px; border-radius: 35px; }
+    .chat-bubble-preview.position-bottom-right { bottom: 20px; right: 20px; }
+    .chat-bubble-preview.position-bottom-left { bottom: 20px; left: 20px; }
+    .chat-bubble-preview.position-top-right { top: 20px; right: 20px; }
+    .chat-bubble-preview.position-top-left { top: 20px; left: 20px; }
+    
+    
+.chat-bubble-preview.no-pulse { animation: none !important; }
+.chat-bubble-preview.no-shadow { box-shadow: none !important; }
 
-      .user-menu {
-        display: flex;
-        align-items: center;
-        gap: 1rem;
-      }
+    /* Chat Widget Preview */
+    .chat-widget-preview { width: 300px; height: 420px; border-radius: calc(var(--radius) + 4px); box-shadow: 0 10px 25px rgba(0,0,0,0.1); overflow: hidden; display: flex; flex-direction: column; border: 1px solid hsl(var(--border)); background: hsl(var(--background)); }
+    .chat-header-preview { padding: 0.75rem 1rem; color: white; display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem; font-weight: 500; }
+    .chat-messages-preview { flex: 1; padding: 1rem; overflow-y: auto; background: #fafafa; display: flex; flex-direction: column; gap: 0.75rem; }
+    .msg-bot, .msg-user { max-width: 85%; font-size: 0.875rem; padding: 0.6rem 0.8rem; line-height: 1.4; border-radius: var(--radius); box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .msg-bot { background: white; align-self: flex-start; border: 1px solid hsl(var(--border)); }
+    .msg-user { background: hsl(var(--primary)); color: white; align-self: flex-end; }
+    .msg-bot.style-square, .msg-user.style-square { border-radius: 0; }
+    .msg-bot.style-minimal { background: transparent; border: none; border-left: 2px solid hsl(var(--primary)); border-radius: 0; box-shadow: none; padding-left: 1rem; }
+    .msg-user.style-minimal { background: transparent; color: hsl(var(--foreground)); border: none; border-right: 2px solid hsl(var(--primary)); border-radius: 0; box-shadow: none; padding-right: 1rem; text-align: right; }
+    
+    .chat-input-preview-box { padding: 0.75rem; border-top: 1px solid hsl(var(--border)); background: background; display: flex; gap: 0.5rem; align-items: center; }
+    
+    .chat-widget-preview.theme-dark { background: #09090b; border-color: #27272a; }
+    .chat-widget-preview.theme-dark .chat-messages-preview { background: #121212; }
+    .chat-widget-preview.theme-dark .msg-bot { background: #27272a; border-color: #27272a; color: #fff; }
+    .chat-widget-preview.theme-dark .chat-input-preview-box { border-color: #27272a; background: #09090b; }
+    
+    /* Code bloc */
+    pre { background: hsl(var(--primary)); color: hsl(var(--muted)); padding: 1rem; border-radius: var(--radius); overflow-x: auto; font-family: monospace; font-size: 0.875rem; }
+  </style>
+</head>
+<body>
+  
+  <div class="app-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <i data-lucide="brain-circuit"></i> Qunix
+      </div>
+      <nav class="sidebar-nav">
+        <a class="sidebar-link active" href="#"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+        <a class="sidebar-link" href="#" onclick="viewDocumentation()"><i data-lucide="book-open"></i> Documentation</a>
+        <a class="sidebar-link" href="#" onclick="viewExamples()"><i data-lucide="images"></i> Examples</a>
+        <a class="sidebar-link" href="#" onclick="contactSupport()"><i data-lucide="headphones"></i> Support</a>
+      </nav>
+      <div class="sidebar-footer">
+        <button class="btn btn-secondary" style="width: 100%; justify-content: flex-start" onclick="openSettings()">
+          <i data-lucide="settings"></i> Settings
+        </button>
+      </div>
+    </aside>
 
-      .dashboard-container {
-        max-width: 1200px;
-        margin: 0 auto;
-        padding: 2rem 20px;
-      }
-
-      .dashboard-title {
-        font-size: 2rem;
-        margin-bottom: 0.5rem;
-        color: #1a1a1a;
-      }
-
-      .dashboard-subtitle {
-        color: #666;
-        margin-bottom: 2rem;
-      }
-
-      .stats-grid {
-        display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-        gap: 1.5rem;
-        margin-bottom: 3rem;
-      }
-
-      .stat-card {
-        background: white;
-        padding: 2rem;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e1e5e9;
-      }
-
-      .stat-value {
-        font-size: 2.5rem;
-        font-weight: 700;
-        color: #00a86b;
-        margin-bottom: 0.5rem;
-      }
-
-      .stat-label {
-        color: #666;
-        font-size: 0.9rem;
-      }
-
-      .stat-change {
-        font-size: 0.8rem;
-        margin-top: 0.5rem;
-      }
-
-      .stat-change.positive {
-        color: #28a745;
-      }
-
-      .stat-change.negative {
-        color: #dc3545;
-      }
-
-      .dashboard-grid {
-        display: grid;
-        grid-template-columns: 2fr 1fr;
-        gap: 2rem;
-      }
-
-      .main-content {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-      }
-
-      .sidebar {
-        display: flex;
-        flex-direction: column;
-        gap: 2rem;
-      }
-
-      .card {
-        background: white;
-        border-radius: 12px;
-        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-        border: 1px solid #e1e5e9;
-      }
-
-      .card-header {
-        padding: 1.5rem;
-        border-bottom: 1px solid #e1e5e9;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .card-title {
-        font-size: 1.2rem;
-        font-weight: 600;
-        color: #1a1a1a;
-      }
-
-      .card-body {
-        padding: 1.5rem;
-      }
-
-      .widget-item {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem;
-        border: 1px solid #e1e5e9;
-        border-radius: 8px;
-        margin-bottom: 1rem;
-      }
-
-      .widget-info h4 {
-        margin-bottom: 0.25rem;
-        color: #1a1a1a;
-      }
-
-      .widget-info p {
-        color: #666;
-        font-size: 0.9rem;
-      }
-
-      .widget-status {
-        padding: 4px 12px;
-        border-radius: 20px;
-        font-size: 0.8rem;
-        font-weight: 600;
-      }
-
-      .status-active {
-        background: #d4edda;
-        color: #155724;
-      }
-
-      .status-inactive {
-        background: #f8d7da;
-        color: #721c24;
-      }
-
-      .btn {
-        display: inline-flex;
-        align-items: center;
-        gap: 8px;
-        padding: 10px 20px;
-        border: none;
-        border-radius: 6px;
-        font-weight: 600;
-        text-decoration: none;
-        cursor: pointer;
-        transition: all 0.3s ease;
-        font-size: 0.9rem;
-      }
-
-      .btn-primary {
-        background: #00a86b;
-        color: white;
-      }
-
-      .btn-primary:hover {
-        background: #00c878;
-      }
-
-      .btn-secondary {
-        background: #6c757d;
-        color: white;
-      }
-
-      .btn-secondary:hover {
-        background: #5a6268;
-      }
-
-      .btn-outline {
-        background: transparent;
-        color: #00a86b;
-        border: 1px solid #00a86b;
-      }
-
-      .btn-outline:hover {
-        background: #00a86b;
-        color: white;
-      }
-
-      .code-block {
-        background: #1a1a1a;
-        color: #f8f8f2;
-        padding: 1rem;
-        border-radius: 6px;
-        font-family: "Monaco", "Menlo", monospace;
-        font-size: 0.8rem;
-        position: relative;
-        margin: 1rem 0;
-      }
-
-      .copy-btn {
-        position: absolute;
-        top: 8px;
-        right: 8px;
-        background: #00a86b;
-        color: white;
-        border: none;
-        padding: 4px 8px;
-        border-radius: 4px;
-        cursor: pointer;
-        font-size: 0.7rem;
-      }
-
-      .recent-conversations {
-        max-height: 400px;
-        overflow-y: auto;
-      }
-
-      .conversation-item {
-        padding: 1rem;
-        border-bottom: 1px solid #e1e5e9;
-      }
-
-      .conversation-item:last-child {
-        border-bottom: none;
-      }
-
-      .conversation-meta {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-bottom: 0.5rem;
-      }
-
-      .conversation-website {
-        font-weight: 600;
-        color: #1a1a1a;
-        font-size: 0.9rem;
-      }
-
-      .conversation-time {
-        color: #666;
-        font-size: 0.8rem;
-      }
-
-      .conversation-preview {
-        color: #666;
-        font-size: 0.9rem;
-        line-height: 1.4;
-      }
-
-      .quick-actions {
-        display: flex;
-        flex-direction: column;
-        gap: 1rem;
-      }
-
-      @media (max-width: 768px) {
-        .dashboard-grid {
-          grid-template-columns: 1fr;
-        }
-
-        .stats-grid {
-          grid-template-columns: 1fr;
-        }
-      }
-    </style>
-  </head>
-  <body>
-    <!-- Header -->
-    <header class="dashboard-header">
-      <div class="header-content">
-        <div class="logo">
-          <span>🍃</span>
-          <span>ChatMongo</span>
+    <!-- Main Content -->
+    <main class="main-content">
+      <header class="top-header">
+        <div class="flex items-center gap-4">
+          <span class="text-sm font-medium" id="user-email">Loading...</span>
+          <button class="btn btn-secondary" style="height: 2rem; padding: 0 0.5rem;" onclick="logout()">
+            <i data-lucide="log-out" width="16" height="16"></i> Logout
+          </button>
         </div>
-        <div class="user-menu">
-          <span>john@example.com</span>
-          <button class="btn btn-outline">Settings</button>
-          <button class="btn btn-secondary">Logout</button>
+      </header>
+
+      <div class="scroll-area flex-1">
+        <div class="max-w-6xl">
+          
+          <div id="loading-screen" class="text-center" style="padding: 4rem 0;">
+            <i data-lucide="loader-2" class="lucide-spin" width="32" height="32" style="margin: 0 auto; animation: spin 1s linear infinite;"></i>
+            <h2 class="text-xl mt-4 font-semibold">Loading dashboard...</h2>
+          </div>
+
+          <div id="dashboard-content" style="display: none;">
+            <div class="mb-8">
+              <h1 class="text-3xl font-semibold mb-2">Dashboard</h1>
+              <p class="text-muted">Welcome back to your Qunix Smart Support console.</p>
+            </div>
+
+            <!-- Stats Grid -->
+            <div class="grid grid-4 gap-6 mb-8">
+              <div class="card">
+                <p class="text-sm text-muted mb-2 font-medium">Messages Used</p>
+                <div class="text-3xl font-semibold" id="message-count">0</div>
+              </div>
+              <div class="card">
+                <p class="text-sm text-muted mb-2 font-medium">Active Widgets</p>
+                <div class="text-3xl font-semibold" id="widget-count">0</div>
+              </div>
+              <div class="card">
+                <p class="text-sm text-muted mb-2 font-medium">Messages</p>
+                <div class="text-3xl font-semibold" id="messages-remaining">100%</div>
+              </div>
+              <div class="card">
+                <p class="text-sm text-muted mb-2 font-medium">Days Active</p>
+                <div class="text-3xl font-semibold" id="days-active">0</div>
+              </div>
+            </div>
+
+            <!-- 2 Col Layout -->
+            <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Your Chatbot Widget</h3>
+                </div>
+                <div id="widget-section">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-header">
+                  <h3 class="card-title">Quick Actions</h3>
+                </div>
+                <div id="quick-actions" class="flex" style="flex-direction: column; gap: 0.5rem;">
+                  <!-- Dynamically populated -->
+                </div>
+              </div>
+            </div>
+          </div>
+
         </div>
       </div>
-    </header>
+    </main>
+  </div>
 
-    <!-- Dashboard Content -->
-    <div class="dashboard-container">
-      <h1 class="dashboard-title">Dashboard</h1>
-      <p class="dashboard-subtitle">
-        Monitor your ChatMongo widgets and conversations
-      </p>
-
-      <!-- Stats Grid -->
-      <div class="stats-grid">
-        <div class="stat-card">
-          <div class="stat-value">1,247</div>
-          <div class="stat-label">Total Conversations</div>
-          <div class="stat-change positive">+12% from last month</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">3</div>
-          <div class="stat-label">Active Widgets</div>
-          <div class="stat-change positive">+1 this month</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">94%</div>
-          <div class="stat-label">User Satisfaction</div>
-          <div class="stat-change positive">+2% from last month</div>
-        </div>
-        <div class="stat-card">
-          <div class="stat-value">2.3s</div>
-          <div class="stat-label">Avg Response Time</div>
-          <div class="stat-change negative">+0.1s from last month</div>
-        </div>
+  <!-- Wizard Modal -->
+  <div class="modal" id="widget-creation-modal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h3 id="modal-title" class="font-semibold text-lg">Create Your Chatbot</h3>
+        <button class="modal-close" onclick="closeWidgetModal()"><i data-lucide="x"></i></button>
       </div>
-
-      <!-- Main Dashboard Grid -->
-      <div class="dashboard-grid">
-        <!-- Main Content -->
-        <div class="main-content">
-          <!-- Widgets Management -->
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Your Widgets</h3>
-              <button class="btn btn-primary">+ Add New Widget</button>
-            </div>
-            <div class="card-body">
-              <div class="widget-item">
-                <div class="widget-info">
-                  <h4>example.com</h4>
-                  <p>
-                    Widget Key: cmw_abc123def456 • 847 conversations this month
-                  </p>
-                </div>
-                <div>
-                  <span class="widget-status status-active">Active</span>
-                </div>
-              </div>
-
-              <div class="widget-item">
-                <div class="widget-info">
-                  <h4>docs.mycompany.com</h4>
-                  <p>
-                    Widget Key: cmw_xyz789ghi012 • 324 conversations this month
-                  </p>
-                </div>
-                <div>
-                  <span class="widget-status status-active">Active</span>
-                </div>
-              </div>
-
-              <div class="widget-item">
-                <div class="widget-info">
-                  <h4>blog.example.org</h4>
-                  <p>
-                    Widget Key: cmw_mno345pqr678 • 76 conversations this month
-                  </p>
-                </div>
-                <div>
-                  <span class="widget-status status-inactive">Inactive</span>
-                </div>
-              </div>
-            </div>
+      <div class="modal-body">
+        
+        <!-- Step 1 Upload -->
+        <div id="step-upload">
+          <div class="step-header">
+            <h4 class="text-xl font-semibold mb-2">Upload Your Documents</h4>
+            <p class="text-muted text-sm">Upload PDF files that your chatbot will use to answer questions.</p>
+          </div>
+          
+          <div class="upload-area mb-6" id="pdf-upload-area">
+            <i data-lucide="file-up" width="32" height="32" class="mb-2" style="margin: 0 auto; color: hsl(var(--muted-foreground));"></i>
+            <p class="font-medium text-sm">Drag & drop your PDF files here</p>
+            <p class="text-muted text-xs mt-1">or click to browse</p>
+            <input type="file" id="pdf-file-input" accept=".pdf" multiple style="display: none" />
           </div>
 
-          <!-- Recent Conversations -->
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Recent Conversations</h3>
-              <button class="btn btn-outline">View All</button>
+          <div id="file-list" style="display: none;" class="mb-6">
+            <h5 class="text-sm font-semibold mb-2">Selected Files</h5>
+            <div id="files-container" class="flex" style="flex-direction: column; gap: 0.5rem;"></div>
+          </div>
+
+          <div id="upload-progress" style="display: none; background: #fafafa;" class="mb-6 card">
+            <div class="flex justify-between text-sm font-medium mb-1">
+              <span id="progress-status">Uploading...</span>
             </div>
-            <div class="card-body">
-              <div class="recent-conversations">
-                <div class="conversation-item">
-                  <div class="conversation-meta">
-                    <span class="conversation-website">example.com</span>
-                    <span class="conversation-time">2 minutes ago</span>
-                  </div>
-                  <div class="conversation-preview">
-                    User: "What are MongoDB best practices for indexing?"
-                  </div>
-                </div>
-
-                <div class="conversation-item">
-                  <div class="conversation-meta">
-                    <span class="conversation-website">docs.mycompany.com</span>
-                    <span class="conversation-time">15 minutes ago</span>
-                  </div>
-                  <div class="conversation-preview">
-                    User: "How do I optimize MongoDB performance for large
-                    datasets?"
-                  </div>
-                </div>
-
-                <div class="conversation-item">
-                  <div class="conversation-meta">
-                    <span class="conversation-website">example.com</span>
-                    <span class="conversation-time">1 hour ago</span>
-                  </div>
-                  <div class="conversation-preview">
-                    User: "What's the difference between MongoDB and SQL
-                    databases?"
-                  </div>
-                </div>
-
-                <div class="conversation-item">
-                  <div class="conversation-meta">
-                    <span class="conversation-website">docs.mycompany.com</span>
-                    <span class="conversation-time">3 hours ago</span>
-                  </div>
-                  <div class="conversation-preview">
-                    User: "How do I create a compound index in MongoDB?"
-                  </div>
-                </div>
-              </div>
+            <div class="progress-bar">
+              <div class="progress-fill" id="progress-fill"></div>
             </div>
+            <p class="text-xs text-muted" id="progress-details">Extracting text...</p>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" onclick="closeWidgetModal()">Cancel</button>
+            <button class="btn btn-primary" id="upload-next-btn" onclick="processDocuments()" disabled>Process Documents</button>
           </div>
         </div>
 
-        <!-- Sidebar -->
-        <div class="sidebar">
-          <!-- Quick Actions -->
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Quick Actions</h3>
+        <!-- Step 2 Processing Complete -->
+        <div id="step-processing-complete" style="display: none;">
+          <div class="step-header">
+            <div style="display: flex; justify-content: center; margin-bottom: 1rem;"><i data-lucide="check-circle-2" width="48" height="48" style="color: hsl(var(--primary));"></i></div>
+            <h4 class="text-xl font-semibold mb-2">Embedding Generated Successfully</h4>
+            <p class="text-muted text-sm">Your documents have been processed and converted into AI-readable format.</p>
+          </div>
+
+          <div class="card mb-6" id="processing-summary"></div>
+          
+          <div class="grid grid-4 gap-4 mb-6">
+            <div class="card p-4">
+              <h5 class="font-semibold text-sm mb-1">Vector DB</h5>
+              <p class="text-xs text-muted">Stored as high-dimensional vectors</p>
             </div>
-            <div class="card-body">
-              <div class="quick-actions">
-                <button class="btn btn-primary">+ Add New Widget</button>
-                <button class="btn btn-outline">Customize Widget</button>
-                <button class="btn btn-outline">Download Analytics</button>
-                <button class="btn btn-outline">View Documentation</button>
-              </div>
+            <div class="card p-4">
+              <h5 class="font-semibold text-sm mb-1">AI Model</h5>
+              <p class="text-xs text-muted">Configured for your content</p>
             </div>
           </div>
 
-          <!-- Widget Code -->
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Widget Code</h3>
-            </div>
-            <div class="card-body">
-              <p style="margin-bottom: 1rem; color: #666; font-size: 0.9rem">
-                Copy this code to add ChatMongo to any website:
-              </p>
-              <div class="code-block">
-                <button class="copy-btn" onclick="copyCode()">Copy</button>
-                <code id="widget-code"
-                  >&lt;script src="https://cdn.chatmongo.com/widget.js"
-                  data-key="cmw_abc123def456"&gt; &lt;/script&gt;</code
-                >
-              </div>
-            </div>
-          </div>
-
-          <!-- Account Info -->
-          <div class="card">
-            <div class="card-header">
-              <h3 class="card-title">Account</h3>
-            </div>
-            <div class="card-body">
-              <div style="margin-bottom: 1rem">
-                <strong>Plan:</strong> Professional
-              </div>
-              <div style="margin-bottom: 1rem">
-                <strong>Usage:</strong> 1,247 / 5,000 conversations
-              </div>
-              <div style="margin-bottom: 1.5rem">
-                <strong>Billing:</strong> $29/month
-              </div>
-              <button class="btn btn-outline" style="width: 100%">
-                Manage Billing
-              </button>
-            </div>
+          <div class="step-actions">
+            <button class="btn btn-secondary" onclick="closeWidgetModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="goToCustomization()">Customize Chat Bubble <i data-lucide="arrow-right" width="16" height="16"></i></button>
           </div>
         </div>
+
+        <!-- Step 3 Bubble Customization -->
+        <div id="step-bubble-customization" style="display: none;">
+          <div class="step-header">
+            <h4 class="text-xl font-semibold mb-2">Customize Chat Bubble</h4>
+            <p class="text-muted text-sm">Design how your chat bubble appears on your website.</p>
+          </div>
+
+          <div class="config-grid">
+            <div>
+              <div class="form-group">
+                <label class="label">Bubble Color</label>
+                <div class="flex gap-2">
+                  <input type="color" id="bubble-color" value="#09090b" class="input" style="padding: 0; width: 40px;" oninput="updateBubblePreview()" />
+                  <input type="text" id="bubble-color-text" value="#09090b" class="input" oninput="updateBubbleColorFromText()" />
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label class="label">Icon</label>
+                <select id="bubble-icon" class="input" onchange="updateBubblePreview()">
+                  <option value="💬">💬 Chat</option>
+                  <option value="🤖">🤖 Robot</option>
+                  <option value="💡">💡 Help</option>
+                  <option value="●">● Minimal</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">Position</label>
+                <select id="bubble-position" class="input" onchange="updateBubblePreview()">
+                  <option value="bottom-right">Bottom Right</option>
+                  <option value="bottom-left">Bottom Left</option>
+                  <option value="top-right">Top Right</option>
+                  <option value="top-left">Top Left</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">Size</label>
+                <select id="bubble-size" class="input" onchange="updateBubblePreview()">
+                  <option value="small">Small (50px)</option>
+                  <option value="medium" selected>Medium (60px)</option>
+                  <option value="large">Large (70px)</option>
+                </select>
+              </div>
+
+              <div class="form-group">
+                <label class="label">Hover Tooltip</label>
+                <input type="text" id="bubble-text" class="input" value="Chat with us!" oninput="updateBubblePreview()"/>
+              </div>
+
+              <div class="flex gap-4">
+                <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="bubble-pulse" checked onchange="updateBubblePreview()"> Pulse</label>
+                <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="bubble-shadow" checked onchange="updateBubblePreview()"> Shadow</label>
+              </div>
+            </div>
+
+            <div>
+              <div class="preview-box" id="bubble-preview-wrapper">
+                <div class="chat-bubble-preview" id="chat-bubble-preview">
+                  <span id="bubble-icon-preview">💬</span>
+                </div>
+                <div id="bubble-tooltip" style="display:none;"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" onclick="goBackToProcessing()"><i data-lucide="arrow-left" width="16" height="16"></i> Back</button>
+            <button class="btn btn-primary" onclick="goToChatCustomization()">Customize Window <i data-lucide="arrow-right" width="16" height="16"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 4 Chat Interface -->
+        <div id="step-chat-customization" style="display: none;">
+          <div class="step-header">
+            <h4 class="text-xl font-semibold mb-2">Customize Chat Window</h4>
+            <p class="text-muted text-sm">Design the chat window that opens when users click.</p>
+          </div>
+
+          <div class="config-grid">
+            <div>
+              <div class="form-group">
+                <label class="label">Window Title</label>
+                <input type="text" id="chat-title" class="input" value="AI Assistant" oninput="updateChatPreview()" />
+              </div>
+              <div class="form-group">
+                <label class="label">Welcome Message</label>
+                <textarea id="welcome-message" class="input" style="height: auto; padding: 0.5rem 0.75rem" rows="3" oninput="updateChatPreview()">Hello! How can I help you today?</textarea>
+              </div>
+              <div class="form-group">
+                <label class="label">Header Color</label>
+                <div class="flex gap-2">
+                  <input type="color" id="header-color" value="#09090b" class="input" style="padding: 0; width: 40px;" oninput="updateChatPreview()" />
+                  <input type="text" id="header-color-text" value="#09090b" class="input" oninput="updateHeaderColorFromText()" />
+                </div>
+              </div>
+              <div class="form-group">
+                <label class="label">Theme</label>
+                <select id="chat-theme" class="input" onchange="updateChatPreview()">
+                  <option value="light">Light</option>
+                  <option value="dark">Dark</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label class="label">Message Style</label>
+                <select id="message-style" class="input" onchange="updateChatPreview()">
+                  <option value="rounded">Rounded</option>
+                  <option value="square">Square</option>
+                  <option value="minimal">Minimal</option>
+                </select>
+              </div>
+              <label class="flex items-center gap-2 text-sm"><input type="checkbox" id="show-branding" checked onchange="updateChatPreview()"> Show branding</label>
+            </div>
+
+            <div class="flex items-center justify-center">
+              <div id="chat-preview-wrapper" class="preview-box" style="padding: 1rem; height: 100%; width: 100%; border:none; background: transparent;">
+                <div class="chat-widget-preview" id="chat-widget-preview">
+                  <div class="chat-header-preview" id="chat-header-preview">
+                    <span id="chat-title-preview">AI Assistant</span>
+                    <i data-lucide="x" width="16" height="16"></i>
+                  </div>
+                  <div class="chat-messages-preview" id="chat-messages-preview">
+                    <div class="msg-bot" id="welcome-message-preview">Hello! How can I help you today?</div>
+                    <div class="msg-user">Can you help me with pricing?</div>
+                    <div class="msg-bot">I'd be happy to help you with pricing information! Let me find that for you.</div>
+                  </div>
+                  <div class="chat-input-preview-box" id="chat-input-container">
+                    <input type="text" class="input" style="height: 2rem;" id="chat-input" placeholder="Type a message..." disabled />
+                    <button id="chat-send-preview" class="btn btn-primary" style="height: 2rem; width: 2rem; padding: 0; border-radius: 50%;"><i data-lucide="arrow-right" width="14" height="14"></i></button>
+                  </div>
+                  <div id="chat-branding-preview" style="text-align: center; font-size: 0.65rem; padding: 0.25rem; border-top: 1px solid var(--border);">
+                    Powered by Qunix
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" onclick="goBackToBubbleCustomization()"><i data-lucide="arrow-left" width="16" height="16"></i> Back</button>
+            <button class="btn btn-primary" onclick="goToEmbedCodeStep()">Generate Embed Code <i data-lucide="arrow-right" width="16" height="16"></i></button>
+          </div>
+        </div>
+
+        <!-- Step 5 Embed Code -->
+        <div id="step-embed-code" style="display: none;">
+          <div class="step-header">
+            <div style="display: flex; justify-content: center; margin-bottom: 1rem;"><i data-lucide="code-2" width="48" height="48" style="color: hsl(var(--primary));"></i></div>
+            <h4 class="text-xl font-semibold mb-2">Your Chatbot is Ready!</h4>
+            <p class="text-muted text-sm">Copy the embed code and paste it into your website.</p>
+          </div>
+
+          <div class="card mb-6" style="background: #fafafa;">
+            <div class="flex justify-between border-b pb-2 mb-2 text-sm" style="border-bottom: 1px solid hsl(var(--border)); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+              <span class="text-muted">Widget ID:</span> <span class="font-medium font-mono" id="widget-id-display" style="font-family: monospace;">Loading...</span>
+            </div>
+            <div class="flex justify-between border-b pb-2 mb-2 text-sm" style="border-bottom: 1px solid hsl(var(--border)); padding-bottom: 0.5rem; margin-bottom: 0.5rem;">
+              <span class="text-muted">Status:</span> <span class="font-medium" style="color: #10b981;">Active</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-muted">API Endpoint:</span> <span class="font-medium font-mono" style="font-family: monospace;">http://localhost:8001</span>
+            </div>
+          </div>
+
+          <div class="mb-6 relative" id="embed-code-content">
+            <button class="btn btn-secondary" id="copy-btn" onclick="copyEmbedCode()" style="position: absolute; top: 0.5rem; right: 0.5rem; height: 2rem; font-size: 0.75rem;"><i data-lucide="copy" width="14" height="14"></i> Copy</button>
+            <pre><code style="white-space: pre-wrap;"></code></pre>
+          </div>
+
+          <div class="step-actions">
+            <button class="btn btn-secondary" onclick="goBackToChatCustomization()"><i data-lucide="arrow-left" width="16" height="16"></i> Back</button>
+            <button class="btn btn-primary" onclick="finishWidgetCreation()"><i data-lucide="check" width="16" height="16"></i> Complete Setup</button>
+          </div>
+        </div>
+
       </div>
     </div>
+  </div>
 
-    <script>
-      function copyCode() {
-        const codeElement = document.getElementById("widget-code");
-        const code = codeElement.textContent;
+  <style>
+    @keyframes spin { 100% { transform: rotate(360deg); } }
+  </style>
+<script>
+      let currentUser = null;
+      document.addEventListener("DOMContentLoaded", function () {
+        loadDashboard();
+      });
+      function loadDashboard() {
+        const userEmail = localStorage.getItem("userEmail");
+        const signupDate = localStorage.getItem("signupDate");
+        if (!userEmail) {
+          window.location.href = "index.html";
+          return;
+        }
+        currentUser = {
+          email: userEmail,
+          created_at: signupDate || new Date().toISOString(),
+          message_count: 0,
+          message_limit: 300,
+          widget_status: "none",
+        };
+        document.getElementById("user-email").textContent = currentUser.email;
+        updateDashboardStats();
+        updateWidgetSection();
+        updateQuickActions();
+        document.getElementById("loading-screen").style.display = "none";
+        document.getElementById("dashboard-content").style.display = "block";
+      }
+      function updateDashboardStats() {
+        document.getElementById("message-count").textContent =
+          currentUser.message_count;
+        document.getElementById("widget-count").textContent =
+          currentUser.widget_status === "none" ? 0 : 1;
+        const remainingMessages =
+          currentUser.message_limit - currentUser.message_count;
+        const percentage = Math.round(
+          (remainingMessages / currentUser.message_limit) * 100,
+        );
+        document.getElementById("messages-remaining").textContent =
+          percentage + "%";
+        const createdDate = new Date(currentUser.created_at);
+        const daysSince = Math.floor(
+          (new Date() - createdDate) / (1000 * 60 * 60 * 24),
+        );
+        document.getElementById("days-active").textContent = daysSince;
+      }
+      function updateWidgetSection() {
+        const widgetSection = document.getElementById("widget-section");
+        if (currentUser.widget_status === "none") {
+          widgetSection.innerHTML =
+            '<div style="text-align: center; padding: 2rem 0;"><i data-lucide="bot" width="48" height="48" style="margin: 0 auto 1rem; color: hsl(var(--primary));"></i><h4 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.5rem;">Create Your First Chatbot</h4><p style="color: hsl(var(--muted-foreground)); font-size: 0.875rem; margin-bottom: 1.5rem; max-width: 400px; margin-left: auto; margin-right: auto;">Upload your PDF documents and create a custom AI chatbot that can answer questions about your content.</p><button class="btn btn-primary" onclick="startWidgetCreation()"><i data-lucide="rocket" width="16" height="16"></i> Create Your Chatbot</button></div>';
+        } else {
+          const customization = JSON.parse(
+            localStorage.getItem("widgetCustomization") || "{}",
+          );
+          widgetSection.innerHTML =
+            '<div style="display: flex; align-items: center; gap: 1.5rem; padding: 1rem 0;"><div style="width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: ' + (customization.bubbleColor || '#09090b') + '; color: white; font-size: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">' + (customization.bubbleIcon || '💬') + '</div><div style="flex: 1;"><h4 style="font-size: 1.125rem; font-weight: 600; margin-bottom: 0.25rem;">' + (customization.chatTitle || 'AI Assistant') + '</h4><p style="display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #10b981; font-weight: 500; margin-bottom: 0.25rem;"><span style="display: inline-block; width: 8px; height: 8px; background: #10b981; border-radius: 50%;"></span> Active and Running</p><p style="color: hsl(var(--muted-foreground)); font-size: 0.75rem;">Deployed on your website successfully</p></div><div><button class="btn btn-primary" style="margin-bottom: 0.5rem; width: 100%;" onclick="viewEmbedCode()"><i data-lucide="clipboard-copy" width="16" height="16"></i> Embed Code</button><button class="btn btn-secondary" style="width: 100%;" onclick="openSettings()"><i data-lucide="settings" width="16" height="16"></i> Settings</button></div></div>';
+        }
+        if (typeof lucide !== "undefined") lucide.createIcons();
+      }
+      function updateQuickActions() {
+        const quickActions = document.getElementById("quick-actions");
+        if (currentUser.widget_status === "none") {
+          quickActions.innerHTML =
+            '<button class="btn btn-primary" onclick="startWidgetCreation()"><i data-lucide="rocket" width="16" height="16"></i> Create Your Chatbot</button><button class="btn btn-secondary" onclick="viewDocumentation()"><i data-lucide="book-open" width="16" height="16"></i> View Documentation</button><button class="btn btn-secondary" onclick="viewExamples()"><i data-lucide="images" width="16" height="16"></i> See Examples</button><button class="btn btn-secondary" onclick="contactSupport()"><i data-lucide="message-square" width="16" height="16"></i> Contact Support</button>';
+        } else {
+          quickActions.innerHTML =
+            '<button class="btn btn-primary" onclick="viewEmbedCode()"><i data-lucide="clipboard-copy" width="16" height="16"></i> Get Embed Code</button><button class="btn btn-secondary" onclick="openSettings()"><i data-lucide="settings" width="16" height="16"></i> Widget Settings</button><button class="btn btn-secondary" onclick="viewAnalytics()"><i data-lucide="bar-chart-2" width="16" height="16"></i> View Analytics</button><button class="btn btn-secondary" onclick="contactSupport()"><i data-lucide="message-square" width="16" height="16"></i> Contact Support</button>';
+        }
+        if (typeof lucide !== "undefined") lucide.createIcons();
+      }
+      // Modal and Upload Logic
+      let selectedFiles = [];
+      let processingResults = null;
+      function startWidgetCreation() {
+        selectedFiles = [];
+        processingResults = null;
+        [
+          "step-upload",
+          "step-processing-complete",
+          "step-bubble-customization",
+          "step-chat-customization",
+          "step-embed-code",
+        ].forEach((id, index) => {
+          document.getElementById(id).style.display =
+            index === 0 ? "block" : "none";
+        });
+        document.getElementById("modal-title").textContent =
+          "🚀 Create Your Chatbot - Step 1 of 5";
+        resetUploadForm();
+        document.getElementById("widget-creation-modal").style.display = "flex";
+      }
+      function closeWidgetModal() {
+        document.getElementById("widget-creation-modal").style.display = "none";
+        resetUploadForm();
+      }
+      function resetUploadForm() {
+        document.getElementById("pdf-file-input").value = "";
+        document.getElementById("file-list").style.display = "none";
+        document.getElementById("upload-progress").style.display = "none";
+        document.getElementById("upload-next-btn").disabled = true;
+        document.getElementById("files-container").innerHTML = "";
+        selectedFiles = [];
+      }
+      function viewEmbedCode() {
+        startWidgetCreation();
+        goToEmbedCodeStep(true);
+      }
+      // Placeholder functions
+      function openSettings() {
+        alert("⚙️ Settings panel coming soon!");
+      }
+      function viewDocumentation() {
+        alert("📖 Documentation coming soon!");
+      }
+      function viewExamples() {
+        alert("👀 Examples gallery coming soon!");
+      }
+      function viewAnalytics() {
+        alert("📊 Analytics dashboard coming soon!");
+      }
+      function contactSupport() {
+        alert("💬 Support system coming soon!");
+      }
+      function openTestPage() {
+        alert("🧪 Test page coming soon!");
+      }
 
-        navigator.clipboard.writeText(code).then(() => {
-          const copyBtn = document.querySelector(".copy-btn");
-          const originalText = copyBtn.textContent;
+      // File Handling
+      document.addEventListener("DOMContentLoaded", function () {
+        const uploadArea = document.getElementById("pdf-upload-area");
+        const fileInput = document.getElementById("pdf-file-input");
+        if (uploadArea && fileInput) {
+          ["dragover", "dragleave", "drop"].forEach((eventName) =>
+            uploadArea.addEventListener(eventName, (e) => e.preventDefault()),
+          );
+          uploadArea.addEventListener("dragover", () =>
+            uploadArea.classList.add("dragover"),
+          );
+          uploadArea.addEventListener("dragleave", () =>
+            uploadArea.classList.remove("dragover"),
+          );
+          uploadArea.addEventListener("drop", (e) => {
+            uploadArea.classList.remove("dragover");
+            const files = Array.from(e.dataTransfer.files).filter(
+              (f) => f.type === "application/pdf",
+            );
+            handleFileSelection(files);
+          });
+          uploadArea.addEventListener("click", () => fileInput.click());
+          fileInput.addEventListener("change", (e) =>
+            handleFileSelection(Array.from(e.target.files)),
+          );
+        }
+        const modal = document.getElementById("widget-creation-modal");
+        if (modal)
+          modal.addEventListener(
+            "click",
+            (e) => e.target === modal && closeWidgetModal(),
+          );
+      });
+      function handleFileSelection(files) {
+        files.forEach((file) => {
+          if (
+            !selectedFiles.find(
+              (f) => f.name === file.name && f.size === file.size,
+            )
+          ) {
+            selectedFiles.push(file);
+          }
+        });
+        displaySelectedFiles();
+        document.getElementById("upload-next-btn").disabled =
+          selectedFiles.length === 0;
+      }
+      function displaySelectedFiles() {
+        const container = document.getElementById("files-container");
+        const fileList = document.getElementById("file-list");
+        fileList.style.display = selectedFiles.length > 0 ? "block" : "none";
+        container.innerHTML = selectedFiles
+          .map(
+            (file, index) =>
+              `<div style="display: flex; align-items: center; justify-content: space-between; padding: 0.75rem; background: hsl(var(--background)); border: 1px solid hsl(var(--border)); border-radius: var(--radius);">
+              <div style="display: flex; align-items: center; gap: 0.75rem;">
+                <div style="display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; background: hsl(var(--muted)); border-radius: 4px; color: hsl(var(--muted-foreground));"><i data-lucide="file-text" width="16" height="16"></i></div>
+                <div>
+                  <h6 style="font-size: 0.875rem; font-weight: 500; margin: 0;">${file.name}</h6>
+                  <p style="font-size: 0.75rem; color: hsl(var(--muted-foreground)); margin: 0;">${formatFileSize(file.size)} • PDF Document</p>
+                </div>
+              </div>
+              <button onclick="removeFile(${index})" style="background: none; border: none; cursor: pointer; color: hsl(var(--muted-foreground)); display: flex; align-items: center; justify-content: center; padding: 0.25rem;"><i data-lucide="x" width="16" height="16"></i></button>
+            </div>`,
+          )
+          .join("");
+        if (typeof lucide !== "undefined") lucide.createIcons();
+      }
+      function removeFile(index) {
+        selectedFiles.splice(index, 1);
+        displaySelectedFiles();
+        document.getElementById("upload-next-btn").disabled =
+          selectedFiles.length === 0;
+      }
+      function formatFileSize(bytes) {
+        if (bytes === 0) return "0 Bytes";
+        const i = Math.floor(Math.log(bytes) / Math.log(1024));
+        return `${parseFloat((bytes / Math.pow(1024, i)).toFixed(2))} ${
+          ["Bytes", "KB", "MB", "GB"][i]
+        }`;
+      }
 
-          copyBtn.textContent = "Copied!";
-          copyBtn.style.background = "#28a745";
+      // Document Processing
+      async function processDocuments() {
+        if (selectedFiles.length === 0) return;
+        document.getElementById("upload-progress").style.display = "block";
+        document.getElementById("upload-next-btn").disabled = true;
 
+        try {
+          updateProgress(
+            20,
+            "Uploading files...",
+            "Preparing your documents for processing.",
+          );
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          updateProgress(
+            60,
+            "Extracting text...",
+            "Reading content from your PDF documents.",
+          );
+          await new Promise((resolve) => setTimeout(resolve, 1500));
+
+          const mockResult = {
+            message: "Documents processed successfully",
+            chunks_count: Math.floor(Math.random() * 451) + 50,
+            user: currentUser.email,
+          };
+          processingResults = mockResult;
+
+          updateProgress(
+            90,
+            "Creating embeddings...",
+            "Preparing your documents for intelligent search.",
+          );
+          await new Promise((resolve) => setTimeout(resolve, 1000));
+
+          updateProgress(
+            100,
+            "Processing complete!",
+            "Your documents are ready for the chatbot.",
+          );
+          await new Promise((resolve) => setTimeout(resolve, 500));
+
+          showProcessingComplete();
+        } catch (error) {
+          console.error("Processing error:", error);
+          updateProgress(
+            0,
+            "Processing failed",
+            "An unexpected error occurred. Please try again.",
+          );
           setTimeout(() => {
-            copyBtn.textContent = originalText;
-            copyBtn.style.background = "#00A86B";
+            document.getElementById("upload-next-btn").disabled = false;
+            document.getElementById("upload-progress").style.display = "none";
+          }, 3000);
+        }
+      }
+
+      function updateProgress(percentage, status, details) {
+        document.getElementById("progress-fill").style.width = `${percentage}%`;
+        document.getElementById("progress-status").textContent = status;
+        document.getElementById("progress-details").textContent = details;
+      }
+
+      // Navigation Functions
+      function showProcessingComplete() {
+        document.getElementById("step-upload").style.display = "none";
+        document.getElementById("step-processing-complete").style.display =
+          "block";
+        document.getElementById("modal-title").textContent =
+          "Create Your Chatbot - Step 2 of 5";
+        const summary = document.getElementById("processing-summary");
+        const totalFiles = selectedFiles.length;
+        const totalSize = selectedFiles.reduce(
+          (sum, file) => sum + file.size,
+          0,
+        );
+        summary.innerHTML = `<div style="display: flex; flex-direction: column; gap: 0.75rem; padding: 0.5rem;">
+           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;"><span style="color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="file-text" width="14" height="14"></i> Documents processed:</span><span style="font-weight: 500;">${totalFiles} PDF${totalFiles > 1 ? "s" : ""}</span></div>
+           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;"><span style="color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="hard-drive" width="14" height="14"></i> Total size:</span><span style="font-weight: 500;">${formatFileSize(totalSize)}</span></div>
+           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;"><span style="color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="brain-circuit" width="14" height="14"></i> Text chunks created:</span><span style="font-weight: 500;">${processingResults?.chunks_count || 0}</span></div>
+           <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.875rem;"><span style="color: hsl(var(--muted-foreground)); display: flex; align-items: center; gap: 0.5rem;"><i data-lucide="check-circle" width="14" height="14"></i> Status:</span><span style="font-weight: 500; color: #10b981;">Ready for customization</span></div>
+           </div>`;
+        if (typeof lucide !== "undefined") lucide.createIcons();
+      }
+      function goToCustomization() {
+        document.getElementById("step-processing-complete").style.display =
+          "none";
+        document.getElementById("step-bubble-customization").style.display =
+          "block";
+        document.getElementById("modal-title").textContent =
+          "🚀 Create Your Chatbot - Step 3 of 5";
+        updateBubblePreview();
+      }
+      function goBackToProcessing() {
+        document.getElementById("step-bubble-customization").style.display =
+          "none";
+        document.getElementById("step-processing-complete").style.display =
+          "block";
+        document.getElementById("modal-title").textContent =
+          "🚀 Create Your Chatbot - Step 2 of 5";
+      }
+      function goToChatCustomization() {
+        document.getElementById("step-bubble-customization").style.display =
+          "none";
+        document.getElementById("step-chat-customization").style.display =
+          "block";
+        document.getElementById("modal-title").textContent =
+          "🚀 Create Your Chatbot - Step 4 of 5";
+        updateChatPreview();
+      }
+      function goBackToBubbleCustomization() {
+        document.getElementById("step-chat-customization").style.display =
+          "none";
+        document.getElementById("step-bubble-customization").style.display =
+          "block";
+        document.getElementById("modal-title").textContent =
+          "🚀 Create Your Chatbot - Step 3 of 5";
+      }
+      function goToEmbedCodeStep(isExisting = false) {
+        if (!isExisting) {
+          document.getElementById("step-chat-customization").style.display =
+            "none";
+        } else {
+          [
+            "step-upload",
+            "step-processing-complete",
+            "step-bubble-customization",
+            "step-chat-customization",
+          ].forEach((id) => {
+            document.getElementById(id).style.display = "none";
+          });
+        }
+        document.getElementById("step-embed-code").style.display = "block";
+        document.getElementById("modal-title").textContent =
+          "🚀 Your Chatbot is Ready! - Step 5 of 5";
+        generateAndDisplayEmbedCode();
+      }
+      function goBackToChatCustomization() {
+        document.getElementById("step-embed-code").style.display = "none";
+        document.getElementById("step-chat-customization").style.display =
+          "block";
+        document.getElementById("modal-title").textContent =
+          "🚀 Create Your Chatbot - Step 4 of 5";
+      }
+
+      // Customization & Preview Functions
+      function updateBubblePreview() {
+        const bubbleColor = document.getElementById("bubble-color").value;
+        const bubbleIcon = document.getElementById("bubble-icon").value;
+        const bubblePosition = document.getElementById("bubble-position").value;
+        const bubbleSize = document.getElementById("bubble-size").value;
+        const bubbleText = document.getElementById("bubble-text").value;
+        const enablePulse = document.getElementById("bubble-pulse").checked;
+        const enableShadow = document.getElementById("bubble-shadow").checked;
+
+        const bubble = document.getElementById("chat-bubble-preview");
+        bubble.style.background = bubbleColor;
+        let className = `chat-bubble-preview position-${bubblePosition} size-${bubbleSize}`;
+        if (!enablePulse) className += " no-pulse";
+        if (!enableShadow) className += " no-shadow";
+        bubble.className = className;
+
+        document.getElementById("bubble-icon-preview").textContent = bubbleIcon;
+        document.getElementById("bubble-tooltip").textContent = bubbleText;
+        document.getElementById("bubble-color-text").value = bubbleColor;
+      }
+      function updateBubbleColorFromText() {
+        const colorText = document.getElementById("bubble-color-text").value;
+        if (/^#[0-9A-F]{6}$/i.test(colorText)) {
+          document.getElementById("bubble-color").value = colorText;
+          updateBubblePreview();
+        }
+      }
+      function setPresetColor(color) {
+        document.getElementById("bubble-color").value = color;
+        document.getElementById("bubble-color-text").value = color;
+        updateBubblePreview();
+      }
+      function setPosition(position) {
+        document.getElementById("bubble-position").value = position;
+        document.querySelectorAll(".position-option").forEach((btn) => {
+          btn.classList.remove("active");
+        });
+        document
+          .querySelector(`[data-position="${position}"]`)
+          .classList.add("active");
+        updateBubblePreview();
+      }
+      function setBubbleSize(size) {
+        document.getElementById("bubble-size").value = size;
+        updateBubblePreview();
+      }
+      function updateChatPreview() {
+        const chatTitle = document.getElementById("chat-title").value;
+        const welcomeMessage = document.getElementById("welcome-message").value;
+        const headerColor = document.getElementById("header-color").value;
+        const chatTheme = document.getElementById("chat-theme").value;
+        const messageStyle = document.getElementById("message-style").value;
+        const showBranding = document.getElementById("show-branding").checked;
+
+        document.getElementById("chat-title-preview").textContent = chatTitle;
+        document
+          .getElementById("welcome-message-preview")
+          .querySelector(".message-content").textContent = welcomeMessage;
+        document.getElementById("chat-header-preview").style.background =
+          headerColor;
+        document.getElementById("chat-send-preview").style.background =
+          headerColor;
+        document.getElementById("header-color-text").value = headerColor;
+        document.getElementById("chat-widget-preview").className =
+          "chat-widget-preview theme-" + chatTheme;
+
+        const messages = document.querySelectorAll(
+          "#chat-messages-preview .bot-message, #chat-messages-preview .user-message",
+        );
+        messages.forEach((msg) => {
+          let baseClass = msg.classList.contains("bot-message")
+            ? "bot-message"
+            : "user-message";
+          msg.className = `${baseClass} style-${messageStyle}`;
+        });
+        document.getElementById("chat-branding-preview").style.display =
+          showBranding ? "block" : "none";
+      }
+      function updateHeaderColorFromText() {
+        const colorText = document.getElementById("header-color-text").value;
+        if (/^#[0-9A-F]{6}$/i.test(colorText)) {
+          document.getElementById("header-color").value = colorText;
+          updateChatPreview();
+        }
+      }
+
+      // Embed Code & Finalization
+      function generateAndDisplayEmbedCode() {
+        const widgetId = "qn-" + Date.now();
+        let scriptTag = `<script src="http://localhost:8000/embed.js"
+    data-quinx-chat-id="${widgetId}"
+    data-user="${currentUser.email}"
+    data-bubble-color="${document.getElementById("bubble-color").value}"
+    data-bubble-icon="${encodeURIComponent(
+      document.getElementById("bubble-icon").value,
+    )}"
+    data-bubble-position="${document.getElementById("bubble-position").value}"
+    defer><\/script>`;
+
+        document.getElementById("widget-id-display").textContent = widgetId;
+        document
+          .getElementById("embed-code-content")
+          .querySelector("code").textContent = scriptTag.replace(/^\s+/gm, "");
+      }
+      function copyEmbedCode() {
+        const code = document
+          .getElementById("embed-code-content")
+          .querySelector("code").textContent;
+        navigator.clipboard.writeText(code).then(() => {
+          const copyBtn = document.getElementById("copy-btn");
+          copyBtn.textContent = "✅ Copied!";
+          setTimeout(() => {
+            copyBtn.textContent = "📋 Copy Code";
           }, 2000);
         });
       }
+      function finishWidgetCreation() {
+        const customization = {
+          chatTitle: document.getElementById("chat-title").value,
+          createdAt: new Date().toISOString(),
+        };
+        localStorage.setItem(
+          "widgetCustomization",
+          JSON.stringify(customization),
+        );
+        completeWidgetCreation();
+      }
+      function completeWidgetCreation() {
+        currentUser.widget_status = "active";
+        closeWidgetModal();
+        updateWidgetSection();
+        updateQuickActions();
+        updateDashboardStats();
+        alert(
+          "🎉 Congratulations!\n\nYour AI chatbot has been created successfully!",
+        );
+      }
+      function logout() {
+        localStorage.clear();
+        window.location.href = "index.html";
+      }
+
+      // Initialize Speech Recognition when page loads
+      let speechUI = null;
+      document.addEventListener("DOMContentLoaded", function () {
+        setTimeout(() => {
+          try {
+            speechUI = new SpeechUI({
+              containerId: "chat-input-container",
+              inputId: "chat-input",
+              showVisualizer: true,
+              showLanguageSelector: true,
+              autoSubmit: false,
+            });
+            console.log("Speech UI initialized successfully");
+          } catch (error) {
+            console.log("Speech recognition not available:", error.message);
+          }
+        }, 500);
+      });
+
+      // Cleanup on page unload
+      window.addEventListener("beforeunload", function () {
+        if (speechUI) {
+          speechUI.destroy();
+        }
+      });
     </script>
-  </body>
+<script src="js/speechRecognition.js"></script>
+<script src="js/audioVisualizer.js"></script>
+<script src="js/speechUI.js"></script>
+  <script>lucide.createIcons();</script>
+</body>
 </html>

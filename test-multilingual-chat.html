@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Qunix Smart Support - Multilingual Chat Assistant</title>
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        max-width: 800px;
+        margin: 0 auto;
+        padding: 20px;
+        background-color: #f5f5f5;
+      }
+
+      .header {
+        text-align: center;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 30px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+      }
+
+      .chat-container {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+      }
+
+      .chat-messages {
+        height: 400px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        padding: 15px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+        background-color: #fafafa;
+      }
+
+      .message {
+        margin-bottom: 15px;
+        padding: 10px;
+        border-radius: 10px;
+      }
+
+      .user-message {
+        background-color: #e3f2fd;
+        margin-left: 20px;
+        text-align: right;
+      }
+
+      .assistant-message {
+        background-color: #f1f8e9;
+        margin-right: 20px;
+      }
+
+      .language-info {
+        font-size: 0.8em;
+        color: #666;
+        margin-top: 5px;
+      }
+
+      .input-container {
+        display: flex;
+        gap: 10px;
+        margin-bottom: 15px;
+      }
+
+      #messageInput {
+        flex: 1;
+        padding: 12px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 16px;
+      }
+
+      #sendButton {
+        padding: 12px 24px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+      }
+
+      #sendButton:hover {
+        opacity: 0.9;
+      }
+
+      #sendButton:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+      }
+
+      .examples {
+        background: white;
+        border-radius: 15px;
+        padding: 20px;
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      }
+
+      .example-queries {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+      }
+
+      .example-query {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        border: 1px solid #e9ecef;
+        transition: all 0.2s;
+      }
+
+      .example-query:hover {
+        background: #e9ecef;
+        transform: translateY(-2px);
+      }
+
+      .status {
+        text-align: center;
+        padding: 10px;
+        margin: 10px 0;
+        border-radius: 8px;
+      }
+
+      .status.loading {
+        background-color: #fff3cd;
+        color: #856404;
+      }
+
+      .status.error {
+        background-color: #f8d7da;
+        color: #721c24;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <h1>🌍 Qunix Smart Support AI Assistant</h1>
+      <p>Ask questions in any language and get smart support!</p>
+    </div>
+
+    <div class="chat-container">
+      <div class="chat-messages" id="chatMessages">
+        <div class="message assistant-message">
+          <strong>🤖 Qunix Smart Support Assistant:</strong><br />
+          Hello! I'm your multilingual smart support assistant. You can ask me
+          questions in any language, and I'll respond in the same language you
+          used.
+          <div class="language-info">
+            💡 Try asking in Hindi, Bengali, Tamil, Telugu, or any other
+            language!
+          </div>
+        </div>
+      </div>
+
+      <div class="input-container">
+        <input
+          type="text"
+          id="messageInput"
+          placeholder="Ask me anything in any language..."
+        />
+        <button id="sendButton" onclick="sendMessage()">Send</button>
+      </div>
+
+      <div id="status"></div>
+    </div>
+
+    <div class="examples">
+      <h3>🎯 Example Questions (Click to try):</h3>
+      <div class="example-queries">
+        <div
+          class="example-query"
+          onclick="setMessage('What are the college rules?')"
+        >
+          <strong>English:</strong> What are the college rules?
+        </div>
+        <div
+          class="example-query"
+          onclick="setMessage('कॉलेज के नियम क्या हैं?')"
+        >
+          <strong>Hindi:</strong> कॉलेज के नियम क्या हैं?
+        </div>
+        <div class="example-query" onclick="setMessage('কলেজের নিয়ম কী?')">
+          <strong>Bengali:</strong> কলেজের নিয়ম কী?
+        </div>
+        <div
+          class="example-query"
+          onclick="setMessage('கல்லூரி விதிகள் என்ন?')"
+        >
+          <strong>Tamil:</strong> கல்லூரி விதிகள் என்ன?
+        </div>
+        <div
+          class="example-query"
+          onclick="setMessage('కాలేజీ నియమాలు ఏమిటి?')"
+        >
+          <strong>Telugu:</strong> కాలేజీ నియమాలు ఏమిటి?
+        </div>
+        <div
+          class="example-query"
+          onclick="setMessage('What is the attendance requirement?')"
+        >
+          <strong>English:</strong> What is the attendance requirement?
+        </div>
+        <div
+          class="example-query"
+          onclick="setMessage('उपस्थिति की आवश्यकता क्या है?')"
+        >
+          <strong>Hindi:</strong> उपस्थिति की आवश्यकता क्या है?
+        </div>
+        <div
+          class="example-query"
+          onclick="setMessage('উপস্থিতির প্রয়োজনীয়তা কী?')"
+        >
+          <strong>Bengali:</strong> উপস্থিতির প্রয়োজনীয়তা কী?
+        </div>
+      </div>
+    </div>
+
+    <script>
+      let sessionId = null;
+
+      function setMessage(message) {
+        document.getElementById("messageInput").value = message;
+      }
+
+      function addMessage(content, isUser = false, languageInfo = "") {
+        const messagesContainer = document.getElementById("chatMessages");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${
+          isUser ? "user-message" : "assistant-message"
+        }`;
+
+        let messageContent = `<strong>${
+          isUser ? "👤 You" : "🤖 Qunix Smart Support Assistant"
+        }:</strong><br>${content}`;
+        if (languageInfo) {
+          messageContent += `<div class="language-info">${languageInfo}</div>`;
+        }
+
+        messageDiv.innerHTML = messageContent;
+        messagesContainer.appendChild(messageDiv);
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }
+
+      function showStatus(message, type = "loading") {
+        const statusDiv = document.getElementById("status");
+        statusDiv.textContent = message;
+        statusDiv.className = `status ${type}`;
+
+        if (type !== "error") {
+          setTimeout(() => {
+            statusDiv.textContent = "";
+            statusDiv.className = "";
+          }, 3000);
+        }
+      }
+
+      async function sendMessage() {
+        const input = document.getElementById("messageInput");
+        const sendButton = document.getElementById("sendButton");
+        const message = input.value.trim();
+
+        if (!message) return;
+
+        // Add user message
+        addMessage(message, true);
+
+        // Clear input and disable button
+        input.value = "";
+        sendButton.disabled = true;
+        showStatus("🔄 Processing your multilingual query...");
+
+        try {
+          const response = await fetch("http://localhost:8000/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: message,
+              session_id: sessionId,
+            }),
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+
+          const data = await response.json();
+
+          // Update session ID
+          sessionId = data.session_id;
+
+          // Create language info
+          const languageInfo = `🌍 Detected: ${data.detected_language} → Response: ${data.response_language}`;
+
+          // Add assistant response
+          addMessage(data.response, false, languageInfo);
+
+          showStatus("✅ Response received!");
+        } catch (error) {
+          console.error("Error:", error);
+          addMessage(
+            "❌ Sorry, I encountered an error. Please make sure the server is running on http://localhost:8000",
+            false
+          );
+          showStatus("❌ Error: Could not connect to server", "error");
+        } finally {
+          sendButton.disabled = false;
+        }
+      }
+
+      // Allow Enter key to send message
+      document
+        .getElementById("messageInput")
+        .addEventListener("keypress", function (e) {
+          if (e.key === "Enter") {
+            sendMessage();
+          }
+        });
+
+      // Check server health on load
+      async function checkServerHealth() {
+        try {
+          const response = await fetch("http://localhost:8000/health");
+          const data = await response.json();
+
+          if (data.status === "healthy") {
+            showStatus(
+              `✅ Server connected! Documents loaded: ${data.documents_loaded}`
+            );
+          } else {
+            showStatus("⚠️ Server is not healthy", "error");
+          }
+        } catch (error) {
+          showStatus(
+            "❌ Cannot connect to server. Make sure it's running on http://localhost:8000",
+            "error"
+          );
+        }
+      }
+
+      // Check server health when page loads
+      window.addEventListener("load", checkServerHealth);
+    </script>
+  </body>
+</html>

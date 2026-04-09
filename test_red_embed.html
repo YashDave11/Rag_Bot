@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Test Red Chat Widget</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 20px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        min-height: 100vh;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 40px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      }
+      h1 {
+        color: #333;
+        text-align: center;
+        margin-bottom: 30px;
+      }
+      .info {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+      }
+      .code {
+        background: #2d3748;
+        color: #e2e8f0;
+        padding: 15px;
+        border-radius: 5px;
+        font-family: "Courier New", monospace;
+        font-size: 14px;
+        overflow-x: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🔴 Red Chat Widget Test</h1>
+
+      <div class="info">
+        <h3>Widget Configuration:</h3>
+        <ul>
+          <li><strong>Color:</strong> Red (#dc3545)</li>
+          <li><strong>Icon:</strong> 💬</li>
+          <li><strong>Position:</strong> Bottom Right</li>
+          <li><strong>User:</strong> yashdave2332@gmail.com</li>
+          <li><strong>Chat ID:</strong> qn-1758309566739</li>
+        </ul>
+      </div>
+
+      <div class="info">
+        <h3>Embed Code Used:</h3>
+        <div class="code">
+          &lt;script src="http://localhost:8000/embed.js"<br />
+          &nbsp;&nbsp;data-quinx-chat-id="qn-1758309566739"<br />
+          &nbsp;&nbsp;data-user="yashdave2332@gmail.com"<br />
+          &nbsp;&nbsp;data-bubble-color="#dc3545"<br />
+          &nbsp;&nbsp;data-bubble-icon="%F0%9F%92%AC"<br />
+          &nbsp;&nbsp;data-bubble-position="bottom-right"<br />
+          &nbsp;&nbsp;defer&gt;&lt;/script&gt;
+        </div>
+      </div>
+
+      <p>Look for the red chat bubble in the bottom-right corner! 👀</p>
+      <p>
+        The widget should now use the new red styling instead of the old green
+        one.
+      </p>
+
+      <h3>Test the chat functionality:</h3>
+      <ul>
+        <li>Click the red chat bubble to open</li>
+        <li>Try asking questions about TechnoNJR</li>
+        <li>Check if responses are working properly</li>
+        <li>Verify the red theme is applied throughout</li>
+      </ul>
+    </div>
+
+    <!-- Updated embed script pointing to port 8000 -->
+    <script
+      src="http://localhost:8000/embed.js"
+      data-quinx-chat-id="qn-1758309566739"
+      data-user="yashdave2332@gmail.com"
+      data-bubble-color="#dc3545"
+      data-bubble-icon="%F0%9F%92%AC"
+      data-bubble-position="bottom-right"
+      defer
+    ></script>
+  </body>
+</html>

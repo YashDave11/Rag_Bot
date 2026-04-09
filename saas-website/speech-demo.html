@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Speech Recognition Demo - Qunix Smart Support</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+      :root {
+        --background: 0 0% 100%;
+        --foreground: 240 10% 3.9%;
+        --muted: 240 4.8% 95.9%;
+        --muted-foreground: 240 3.8% 46.1%;
+        --border: 240 5.9% 90%;
+        --primary: 240 5.9% 10%;
+        --primary-foreground: 0 0% 98%;
+        --radius: 0.5rem;
+      }
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      body {
+        font-family: 'Inter', sans-serif; background-color: #fafafa;
+        color: hsl(var(--foreground)); -webkit-font-smoothing: antialiased;
+        min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 2rem;
+      }
+      
+      .demo-container {
+        background: hsl(var(--background)); border: 1px solid hsl(var(--border));
+        border-radius: calc(var(--radius) + 4px); padding: 2.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); max-width: 640px; width: 100%;
+      }
+
+      .demo-header { text-align: center; margin-bottom: 2rem; }
+      .demo-title { font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; letter-spacing: -0.025em; display: flex; align-items: center; justify-content: center; gap: 0.5rem; }
+      .demo-subtitle { color: hsl(var(--muted-foreground)); font-size: 1rem; line-height: 1.5; }
+
+      .demo-instructions {
+        background: hsl(var(--muted)); border: 1px solid hsl(var(--border));
+        border-radius: var(--radius); padding: 1.25rem; margin-bottom: 2rem;
+      }
+      .demo-instructions h3 { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+      .demo-instructions ul { list-style-type: disc; padding-left: 1.5rem; color: hsl(var(--muted-foreground)); font-size: 0.875rem; }
+      .demo-instructions li { margin-bottom: 0.25rem; }
+
+      .features-grid {
+        display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 1rem; margin-bottom: 2rem;
+      }
+      .feature-card {
+        background: hsl(var(--background)); border: 1px solid hsl(var(--border));
+        padding: 1rem; border-radius: var(--radius); text-align: left;
+      }
+      .feature-icon { margin-bottom: 0.75rem; height: 32px; width: 32px; display: flex; align-items: center; justify-content: center; background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); border-radius: var(--radius); }
+      .feature-title { font-weight: 600; font-size: 0.875rem; margin-bottom: 0.25rem; }
+      .feature-description { color: hsl(var(--muted-foreground)); font-size: 0.75rem; line-height: 1.4; }
+
+      .chat-demo {
+        background: hsl(var(--background)); border: 1px solid hsl(var(--border));
+        border-radius: var(--radius); overflow: hidden; margin-bottom: 2rem;
+      }
+      .chat-messages {
+        min-height: 200px; max-height: 300px; overflow-y: auto; padding: 1.5rem;
+        background: #fafafa; display: flex; flex-direction: column; gap: 1rem;
+      }
+
+      .message { display: flex; align-items: flex-end; gap: 0.75rem; }
+      .message.user { flex-direction: row-reverse; }
+
+      .message-avatar {
+        width: 32px; height: 32px; border-radius: 50%; display: flex;
+        align-items: center; justify-content: center; font-size: 0.875rem; flex-shrink: 0;
+      }
+      .message.bot .message-avatar { background: white; border: 1px solid hsl(var(--border)); }
+      .message.user .message-avatar { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+
+      .message-content {
+        padding: 0.75rem 1rem; border-radius: var(--radius); font-size: 0.875rem;
+        max-width: 75%; line-height: 1.4; box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+      }
+      .message.bot .message-content { background: white; border: 1px solid hsl(var(--border)); }
+      .message.user .message-content { background: hsl(var(--primary)); color: hsl(var(--primary-foreground)); }
+
+      .chat-input-demo {
+        display: flex; gap: 0.5rem; align-items: center;
+        background: hsl(var(--background)); padding: 0.75rem; border-top: 1px solid hsl(var(--border));
+        position: relative;
+      }
+      .chat-input-demo input {
+        flex: 1; border: 1px solid hsl(var(--border)); border-radius: var(--radius);
+        outline: none; padding: 0.5rem 0.75rem; font-size: 0.875rem;
+        transition: border-color 0.2s;
+      }
+      .chat-input-demo input:focus { border-color: hsl(var(--primary)); box-shadow: 0 0 0 1px hsl(var(--primary)); }
+
+      .send-button {
+        width: 36px; height: 36px; border: none; border-radius: var(--radius);
+        background: hsl(var(--primary)); color: hsl(var(--primary-foreground));
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+        transition: opacity 0.2s;
+      }
+      .send-button:hover { opacity: 0.9; }
+
+      .browser-support {
+        background: hsl(var(--background)); border: 1px solid hsl(var(--border));
+        border-radius: var(--radius); padding: 1rem; text-align: center; font-size: 0.875rem;
+      }
+      .browser-support.supported { border-left: 4px solid #10b981; }
+      .browser-support.not-supported { border-left: 4px solid #ef4444; }
+
+      /* Extracted speech UI elements logic placeholder overlay */
+      #chat-input-container { position: relative; }
+
+      @media (max-width: 768px) {
+        body { padding: 1rem; }
+        .demo-container { padding: 1.5rem; }
+        .demo-title { font-size: 1.5rem; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="demo-container">
+      <div class="demo-header">
+        <h1 class="demo-title"><i data-lucide="mic"></i> Speech Recognition</h1>
+        <p class="demo-subtitle">Experience advanced speech-to-text with real-time transcription, and visual feedback.</p>
+      </div>
+
+      <div class="demo-instructions">
+        <h3><i data-lucide="info" width="16" height="16"></i> How to Use</h3>
+        <ul>
+          <li>Click the microphone button to start voice input.</li>
+          <li>Speak clearly into your microphone.</li>
+          <li>Watch real-time transcription in the preview.</li>
+          <li>Use <kbd style="font-family:monospace; background:#e4e4e7; padding:2px 4px; border-radius:4px;">Ctrl+Space</kbd> as a keyboard shortcut.</li>
+        </ul>
+      </div>
+
+      <div class="features-grid">
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="target" width="16" height="16"></i></div>
+          <div class="feature-title">High Accuracy</div>
+          <div class="feature-description">Advanced algorithms with confidence scoring and multiple alternatives.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="globe-2" width="16" height="16"></i></div>
+          <div class="feature-title">Multi-Language</div>
+          <div class="feature-description">Support for 20+ languages with automatic detection mechanism.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="activity" width="16" height="16"></i></div>
+          <div class="feature-title">Visual Feedback</div>
+          <div class="feature-description">Real-time audio visualization and intelligent recording indicators.</div>
+        </div>
+        <div class="feature-card">
+          <div class="feature-icon"><i data-lucide="lock" width="16" height="16"></i></div>
+          <div class="feature-title">Privacy First</div>
+          <div class="feature-description">All processing is secured locally in your own browser scope.</div>
+        </div>
+      </div>
+
+      <div class="chat-demo">
+        <div class="chat-messages" id="chat-messages">
+          <div class="message bot">
+            <div class="message-avatar"><i data-lucide="bot" width="16" height="16"></i></div>
+            <div class="message-content">Hello! I'm your AI assistant. Try using voice input to send me a message!</div>
+          </div>
+        </div>
+
+        <div class="chat-input-demo" id="chat-input-container">
+          <input type="text" id="chat-input" placeholder="Type a message or click the mic..." />
+          <button class="send-button" onclick="sendMessage()"><i data-lucide="send" width="16" height="16"></i></button>
+        </div>
+      </div>
+
+      <div id="browser-support" class="browser-support">
+        <strong><i data-lucide="search" width="16" height="16" style="display:inline-block; vertical-align:middle; margin-right:4px;"></i> Checking compatibility...</strong>
+      </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/speechRecognition.js"></script>
+    <script src="js/audioVisualizer.js"></script>
+    <script src="js/speechUI.js"></script>
+
+    <script>
+      lucide.createIcons();
+
+      let speechUI = null;
+      let messageCount = 0;
+
+      function checkBrowserSupport() {
+        const supportDiv = document.getElementById("browser-support");
+        const isSupported = !!(window.SpeechRecognition || window.webkitSpeechRecognition);
+
+        if (isSupported) {
+          supportDiv.className = "browser-support supported";
+          supportDiv.innerHTML = "<strong><span style='color:#10b981; margin-right:4px;'>✓</span> Speech recognition is supported in your browser!</strong>";
+        } else {
+          supportDiv.className = "browser-support not-supported";
+          supportDiv.innerHTML = "<strong><span style='color:#ef4444; margin-right:4px;'>✕</span> Speech recognition is not supported. Use Chrome or Edge.</strong>";
+        }
+        return isSupported;
+      }
+
+      function initializeSpeechUI() {
+        if (!checkBrowserSupport()) return;
+
+        try {
+          speechUI = new SpeechUI({
+            containerId: "chat-input-container",
+            inputId: "chat-input",
+            showVisualizer: true,
+            showLanguageSelector: true,
+            autoSubmit: false,
+          });
+          document.addEventListener("speechTranscriptionComplete", function (event) {
+            console.log("Transcription completed:", event.detail);
+          });
+        } catch (error) {
+          console.error("Failed to initialize Speech UI:", error);
+          const supportDiv = document.getElementById("browser-support");
+          supportDiv.className = "browser-support not-supported";
+          supportDiv.innerHTML = "<strong><span style='color:#ef4444; margin-right:4px;'>✕</span> Failed to initialize: " + error.message + "</strong>";
+        }
+      }
+
+      function sendMessage() {
+        const input = document.getElementById("chat-input");
+        const message = input.value.trim();
+        if (!message) return;
+
+        addMessage(message, "user");
+        input.value = "";
+
+        setTimeout(() => {
+          const responses = [
+            "That's interesting! Tell me more.",
+            "I understand. How can I help you with that?",
+            "Great! Is there anything specific you'd like to know?",
+            "Thanks for sharing! What would you like to do next?",
+            "Excellent! Voice input is working perfectly!",
+          ];
+          const randomResponse = responses[Math.floor(Math.random() * responses.length)];
+          addMessage(randomResponse, "bot");
+        }, 1000);
+      }
+
+      function addMessage(text, sender) {
+        const messagesContainer = document.getElementById("chat-messages");
+        const messageDiv = document.createElement("div");
+        messageDiv.className = `message ${sender}`;
+
+        const avatar = document.createElement("div");
+        avatar.className = "message-avatar";
+        avatar.innerHTML = sender === "user" ? '<i data-lucide="user" width="16" height="16"></i>' : '<i data-lucide="bot" width="16" height="16"></i>';
+
+        const content = document.createElement("div");
+        content.className = "message-content";
+        content.textContent = text;
+
+        messageDiv.appendChild(avatar);
+        messageDiv.appendChild(content);
+        messagesContainer.appendChild(messageDiv);
+        
+        lucide.createIcons({root: messageDiv});
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        messageCount++;
+      }
+
+      document.getElementById("chat-input").addEventListener("keydown", function (event) {
+          if (event.key === "Enter") {
+            event.preventDefault();
+            sendMessage();
+          }
+      });
+
+      document.addEventListener("DOMContentLoaded", function () {
+        checkBrowserSupport();
+        setTimeout(() => { initializeSpeechUI(); }, 500);
+      });
+
+      window.addEventListener("beforeunload", function () {
+        if (speechUI) speechUI.destroy();
+      });
+
+      setTimeout(() => {
+        if (messageCount === 0) {
+          addMessage("Try clicking the microphone button and saying something!", "bot");
+        }
+      }, 3000);
+    </script>
+  </body>
+</html>

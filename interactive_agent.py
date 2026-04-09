@@ -47,8 +47,8 @@ class InteractiveAgent:
             genai.configure(api_key=api_key)
             # Try different model names
             try:
-                self.gemini_model = genai.GenerativeModel('gemini-1.5-flash')
-                print("🚀 Gemini API configured successfully with gemini-1.5-flash!")
+                self.gemini_model = genai.GenerativeModel('gemini-1.5-pro')
+                print("🚀 Gemini API configured successfully with gemini-1.5-pro!")
             except:
                 try:
                     self.gemini_model = genai.GenerativeModel('gemini-1.5-pro')
@@ -177,11 +177,11 @@ RESPONSE:"""
                 return """I couldn't find specific information about that in the MongoDB documentation. 
 
 Try asking about:
-• MongoDB best practices
-• How to create indexes
-• Database performance optimization
-• Collection operations
-• Aggregation pipelines"""
+• General information and support
+• How to get help with specific topics
+• Best practices and guidelines
+• Policies and procedures
+• Frequently asked questions"""
             else:
                 return """👋 Hello! I'm a MongoDB expert assistant. 
 
@@ -289,11 +289,11 @@ SUMMARY:"""
         print("\n" + "="*60)
         print("💬 MongoDB AI Assistant - Interactive Mode")
         print("="*60)
-        print("Ask me anything about MongoDB!")
+        print("Ask me anything!")
         print("Examples:")
-        print("  • What are MongoDB best practices?")
-        print("  • How do I create an index?")
-        print("  • Summarize 'Create a MongoDB Deployment'")
+        print("  • What are the best practices?")
+        print("  • How do I get help with specific topics?")
+        print("  • What are the main policies?")
         print("  • Type 'quit' to exit")
         print("-"*60)
         
